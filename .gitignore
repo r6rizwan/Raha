@@ -19,3 +19,5 @@ backend/dist/
 backend/*.log
 backend/serviceAccountKey.json
 backend/*firebase-adminsdk*.json
+.DS_Store
+.idea/
