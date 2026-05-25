@@ -1,0 +1,21 @@
+# Flutter
+frontend/lib/core/config/env.dart
+frontend/google-services.json
+frontend/android/app/google-services.json
+frontend/ios/Runner/GoogleService-Info.plist
+frontend/GoogleService-Info.plist
+frontend/*.keystore
+frontend/*.jks
+frontend/key.properties
+frontend/.dart_tool/
+frontend/build/
+frontend/.flutter-plugins
+frontend/.flutter-plugins-dependencies
+
+# Node
+backend/.env
+backend/node_modules/
+backend/dist/
+backend/*.log
+backend/serviceAccountKey.json
+backend/*firebase-adminsdk*.json
