@@ -1,18 +1,21 @@
 import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../core/config/env.dart';
 import '../../core/constants/app_constants.dart';
 import '../../core/errors/failures.dart';
 import 'auth_service.dart';
 
 final apiServiceProvider = Provider<ApiService>((ref) => ApiService(ref));
+const _baseUrl = String.fromEnvironment(
+  'BASE_URL',
+  defaultValue: 'http://10.0.2.2:5000',
+);
 
 class ApiService {
   ApiService(this.ref) {
     dio = Dio(
       BaseOptions(
-        baseUrl: Env.baseUrl,
+        baseUrl: _baseUrl,
         connectTimeout: const Duration(
           seconds: AppConstants.connectTimeoutSeconds,
         ),
