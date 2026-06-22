@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../../core/theme/app_theme.dart';
 import '../../data/services/auth_service.dart';
 
 enum LoginMode { signIn, signUp }
@@ -62,81 +64,187 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   final email = TextEditingController();
   final password = TextEditingController();
   final name = TextEditingController();
+
+  @override
+  void dispose() {
+    email.dispose();
+    password.dispose();
+    name.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(loginNotifierProvider);
     final notifier = ref.read(loginNotifierProvider.notifier);
     final signUp = state.mode == LoginMode.signUp;
+
     return Scaffold(
+      backgroundColor: AppColors.primary,
       body: Stack(
         children: [
-          Center(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.all(24),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    'Raha',
-                    style: Theme.of(context).textTheme.headlineMedium,
+          SafeArea(
+            bottom: false,
+            child: Column(
+              children: [
+                const Padding(
+                  padding: EdgeInsets.fromLTRB(24, 34, 24, 34),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'RAHA',
+                        style: TextStyle(
+                          color: AppColors.gold,
+                          fontSize: 11,
+                          fontWeight: FontWeight.w800,
+                          letterSpacing: 1.6,
+                        ),
+                      ),
+                      SizedBox(height: 8),
+                      Text(
+                        'Your home away\nfrom home',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 30,
+                          height: 1.05,
+                          fontWeight: FontWeight.w800,
+                          letterSpacing: -0.5,
+                        ),
+                      ),
+                    ],
                   ),
-                  const Text('Your home away from home'),
-                  const SizedBox(height: 32),
-                  OutlinedButton.icon(
-                    onPressed: state.isLoading
-                        ? null
-                        : notifier.signInWithGoogle,
-                    icon: const Icon(Icons.g_mobiledata),
-                    label: const Text('Continue with Google'),
-                  ),
-                  const Padding(padding: EdgeInsets.all(16), child: Text('or')),
-                  if (signUp)
-                    TextField(
-                      controller: name,
-                      decoration: const InputDecoration(labelText: 'Name'),
-                    ),
-                  TextField(
-                    controller: email,
-                    decoration: const InputDecoration(labelText: 'Email'),
-                  ),
-                  TextField(
-                    controller: password,
-                    obscureText: true,
-                    decoration: const InputDecoration(labelText: 'Password'),
-                  ),
-                  const SizedBox(height: 16),
-                  FilledButton(
-                    onPressed: state.isLoading
-                        ? null
-                        : () => signUp
-                              ? notifier.signUpWithEmail(
-                                  email.text,
-                                  password.text,
-                                  name.text,
-                                )
-                              : notifier.signInWithEmail(
-                                  email.text,
-                                  password.text,
-                                ),
-                    child: Text(signUp ? 'Sign Up' : 'Sign In'),
-                  ),
-                  TextButton(
-                    onPressed: state.isLoading ? null : notifier.toggle,
-                    child: Text(
-                      signUp
-                          ? 'Already have an account? Sign In'
-                          : "Don't have an account? Sign Up",
-                    ),
-                  ),
-                  if (state.errorMessage != null)
-                    Text(
-                      state.errorMessage!,
-                      style: TextStyle(
-                        color: Theme.of(context).colorScheme.error,
+                ),
+                Expanded(
+                  child: Container(
+                    width: double.infinity,
+                    decoration: const BoxDecoration(
+                      color: AppColors.background,
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(28),
+                        topRight: Radius.circular(28),
                       ),
                     ),
-                ],
-              ),
+                    child: SingleChildScrollView(
+                      padding: const EdgeInsets.fromLTRB(20, 22, 20, 28),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          Text(
+                            signUp ? 'Create your account' : 'Welcome back',
+                            style: const TextStyle(
+                              color: AppColors.text,
+                              fontSize: 20,
+                              fontWeight: FontWeight.w800,
+                            ),
+                          ),
+                          const SizedBox(height: 6),
+                          const Text(
+                            'Discover food, services, and local tips for expat life in the UAE.',
+                            style: TextStyle(
+                              color: AppColors.muted,
+                              fontSize: 13,
+                              height: 1.35,
+                            ),
+                          ),
+                          const SizedBox(height: 22),
+                          OutlinedButton.icon(
+                            style: OutlinedButton.styleFrom(
+                              minimumSize: const Size.fromHeight(52),
+                              foregroundColor: AppColors.text,
+                              backgroundColor: AppColors.card,
+                              side: const BorderSide(color: AppColors.border),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(18),
+                              ),
+                            ),
+                            onPressed: state.isLoading
+                                ? null
+                                : notifier.signInWithGoogle,
+                            icon: const Icon(Icons.g_mobiledata, size: 28),
+                            label: const Text('Continue with Google'),
+                          ),
+                          const Padding(
+                            padding: EdgeInsets.symmetric(vertical: 18),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: Divider(color: AppColors.border),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.symmetric(horizontal: 12),
+                                  child: Text(
+                                    'or',
+                                    style: TextStyle(color: AppColors.muted),
+                                  ),
+                                ),
+                                Expanded(
+                                  child: Divider(color: AppColors.border),
+                                ),
+                              ],
+                            ),
+                          ),
+                          if (signUp) ...[
+                            TextField(
+                              controller: name,
+                              decoration: const InputDecoration(
+                                labelText: 'Name',
+                              ),
+                            ),
+                            const SizedBox(height: 12),
+                          ],
+                          TextField(
+                            controller: email,
+                            decoration: const InputDecoration(
+                              labelText: 'Email',
+                            ),
+                          ),
+                          const SizedBox(height: 12),
+                          TextField(
+                            controller: password,
+                            obscureText: true,
+                            decoration: const InputDecoration(
+                              labelText: 'Password',
+                            ),
+                          ),
+                          const SizedBox(height: 18),
+                          FilledButton(
+                            onPressed: state.isLoading
+                                ? null
+                                : () => signUp
+                                      ? notifier.signUpWithEmail(
+                                          email.text,
+                                          password.text,
+                                          name.text,
+                                        )
+                                      : notifier.signInWithEmail(
+                                          email.text,
+                                          password.text,
+                                        ),
+                            child: Text(signUp ? 'Sign Up' : 'Sign In'),
+                          ),
+                          TextButton(
+                            onPressed: state.isLoading ? null : notifier.toggle,
+                            child: Text(
+                              signUp
+                                  ? 'Already have an account? Sign In'
+                                  : "Don't have an account? Sign Up",
+                            ),
+                          ),
+                          if (state.errorMessage != null)
+                            Text(
+                              state.errorMessage!,
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                color: Theme.of(context).colorScheme.error,
+                              ),
+                            ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
           if (state.isLoading)

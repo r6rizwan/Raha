@@ -30,4 +30,11 @@ class BookingNotifier extends AsyncNotifier<List<BookingModel>> {
         );
     r.match((l) => throw l, (_) => ref.invalidateSelf());
   }
+
+  Future<void> cancelBooking(String bookingId) async {
+    final r = await ref
+        .read(bookingRepositoryProvider)
+        .cancelBooking(bookingId);
+    r.match((l) => throw l, (_) => ref.invalidateSelf());
+  }
 }

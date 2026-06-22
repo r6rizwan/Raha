@@ -9,6 +9,7 @@
     "start": "node app.js",
     "dev": "node app.js",
     "seed": "node src/utils/seedData.js",
+    "sync:places:food": "node src/scripts/syncPlacesFood.js",
     "check": "node --check app.js && find src -name '*.js' -print -exec node --check {} \\;",
     "verify": "node src/utils/verifyRuntime.js"
   },

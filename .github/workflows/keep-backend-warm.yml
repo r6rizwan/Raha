@@ -1,0 +1,14 @@
+name: Keep Backend Warm
+
+on:
+  schedule:
+    - cron: "*/10 * * * *"
+  workflow_dispatch:
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping health endpoint
+        run: |
+          curl --fail --silent --show-error "${{ vars.BACKEND_HEALTH_URL }}" > /dev/null

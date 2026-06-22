@@ -27,6 +27,7 @@ app.use(express.json());
 app.use(mongoSanitize());
 app.use(globalLimiter);
 app.use('/health', healthRoutes);
+app.use('/api/health', healthRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/food', verifyToken, foodRoutes);
 app.use('/api/services', verifyToken, serviceRoutes);

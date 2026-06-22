@@ -1,118 +1,117 @@
-# Raha REST API Backend
+# Raha Backend
 
-The backend server for the Raha platform, built using **Node.js**, **Express**, and **MongoDB**. It serves as the primary REST API, managing expat accounts, bookings, local food spots, and integrating with external APIs for location enrichment and AI recommendations.
+Node.js + Express API for Raha. It handles Firebase-authenticated users, food discovery, service providers, bookings, AI recommendations, and Google Places food imports.
 
----
+## Requirements
 
-## 🛠️ Tech Stack & Key Dependencies
+- Node 20+
+- MongoDB
+- Firebase project with Authentication enabled
+- Firebase Admin service account
+- Gemini API key
+- Google Places API key
 
-* **Core**: Node.js & Express.
-* **Database**: MongoDB using [Mongoose](https://mongoosejs.com/) for schema modeling.
-* **Authentication**: [Firebase Admin SDK](https://firebase.google.com/docs/admin/setup) to authenticate users securely by validating JWT tokens on incoming requests.
-* **AI & Integration**:
-  * **Gemini API (`gemini-2.0-flash`)**: Used to generate personalized recommendations based on expat profile criteria.
-  * **Google Places API (New v1)**: Fetches and displays reviews, coordinates, photos, opening hours, and phone numbers of food spots.
-* **Security & Reliability**:
-  * [Helmet](https://helmetjs.github.io/) for setting secure HTTP response headers.
-  * [Express Rate Limit](https://www.npmjs.com/package/express-rate-limit) to prevent abuse of endpoints (specifically bookings and authentication).
-  * [Express Mongo Sanitize](https://www.npmjs.com/package/express-mongo-sanitize) to guard against NoSQL Injection.
+## Environment
 
----
+Create `backend/.env`:
 
-## 📂 Backend Directory Layout (`src/`)
-
-```txt
-├── src/
-│   ├── controllers/         # Business logic functions map to API endpoints
-│   │   ├── authController.js           # User registration and sync
-│   │   ├── bookingController.js        # Creating/updating booking reservations
-│   │   ├── foodController.js           # Querying and retrieving cuisine locations
-│   │   ├── recommendationController.js # Managing AI concierge calls
-│   │   └── serviceController.js        # Querying list of providers
-│   │
-│   ├── middleware/          # Route handlers running before controllers
-│   │   ├── verifyToken.js              # Authorizes requests using Firebase token
-│   │   ├── rateLimiter.js              # Rate limits calls globally and to bookings
-│   │   └── errorHandler.js             # Global server error formatter
-│   │
-│   ├── models/              # Mongoose collection schemas
-│   │   ├── User.js                     # Expat data (nationality, interests)
-│   │   ├── FoodSpot.js                 # Restaurants and local spots
-│   │   ├── ServiceProvider.js          # Plumbers, cleaners, handymen
-│   │   └── Booking.js                  # Reservation statuses and details
-│   │
-│   ├── routes/              # Express API routers mapping controllers to URLs
-│   │
-│   └── utils/               # Configurations and external clients
-│       ├── env.js                      # Environment validator
-│       ├── firebaseAdmin.js            # Initializer for Firebase Admin SDK
-│       ├── geminiClient.js             # Integration client for Gemini 2.0
-│       ├── placesClient.js             # Integration client for Google Places v1
-│       └── seedData.js                 # Mock database seeds
-│
-└── app.js                   # Application bootstrap and database connector
-```
-
----
-
-## ⚙️ Configuration & Environment
-
-Ensure you have **Node 20 or newer** installed.
-
-### 1. Configure Environment variables
-Copy the template file to set up local environment variables:
-```sh
-cp .env.example .env
-```
-
-Define the variables inside `.env`:
 ```env
-MONGO_URI=your-mongodb-connection-string
-FIREBASE_PROJECT_ID=your-firebase-project-id
-GEMINI_API_KEY=your-gemini-api-key
-GOOGLE_PLACES_API_KEY=your-google-places-key (optional)
+MONGO_URI=
+GEMINI_API_KEY=
+GOOGLE_PLACES_API_KEY=
+FIREBASE_PROJECT_ID=
+GOOGLE_APPLICATION_CREDENTIALS=./serviceAccountKey.json
+MIN_APP_VERSION=1.0.0
+LATEST_APP_VERSION=1.0.0
+UPDATE_URL=https://github.com/your-org-or-user/Raha/releases
 PORT=5000
 ALLOWED_ORIGINS=http://localhost:3000,http://10.0.2.2:5000
 RATE_LIMIT_WINDOW_MS=900000
 RATE_LIMIT_MAX=100
 ```
 
-### 2. Firebase Admin Credentials Setup
-To authenticate user tokens, the server needs permission from your Firebase project. Choose **one** of the options:
-* **Option A**: Download your project service account JSON file from the Firebase Console and save it as `backend/serviceAccountKey.json`.
-* **Option B**: Set the environment variable `GOOGLE_APPLICATION_CREDENTIALS` to the absolute path of your credentials JSON file.
-
----
-
-## 🚀 Running & Verification Commands
-
-Execute the following commands in the `backend/` directory:
+## Commands
 
 ```sh
-# 1. Install dependencies
 npm install
-
-# 2. Verify dependencies and connection limits
 npm run verify
-
-# 3. Seed initial dataset (restaurants & providers)
-npm run seed
-
-# 4. Start Server in Development mode
+npm run check
 npm start
 ```
 
-On successful verify, you should see:
+Verify should print:
+
 ```txt
 Firebase Admin verified
 MongoDB verified
 ```
 
----
+## Keep Backend Warm
 
-## 🧪 Verification & Code Checks
+The repo includes [.github/workflows/keep-backend-warm.yml](/Users/rizwan/Documents/GitHub/Raha/.github/workflows/keep-backend-warm.yml), which pings the backend every 10 minutes.
 
-To run security checks, lint rules, and syntax analysis:
-```sh
-npm run check
+Create this GitHub repository variable:
+
+```txt
+BACKEND_HEALTH_URL=https://raha-c9e7.onrender.com/api/health
 ```
+
+## Live Google Places Food Sync
+
+Food records are stored in MongoDB. Google Places is used by a backend sync script, not directly by the Flutter app.
+
+```sh
+npx -y node@20 src/scripts/syncPlacesFood.js --deactivate-seed --page-size=5
+```
+
+The sync script searches Dubai for supported cuisines and upserts restaurants by `googlePlaceId`.
+
+Supported imported cuisines currently include:
+
+```txt
+Indian, Kerala, Punjabi, Filipino, Pakistani, Lebanese, Saudi, Gulf, Emirati
+```
+
+Food record source behavior:
+
+- `google_places`: imported live Google Places data
+- `manual`: manually curated records
+- `seed`: sample fallback records
+
+The food API serves live/manual records first. Seed records are only a fallback when no live/manual records exist for the query.
+
+## Development Seed Data
+
+```sh
+npm run seed
+```
+
+Use this only for local/demo reset data. For live food display, run the Google Places sync after seeding.
+
+## API Health
+
+```txt
+GET /health
+GET /api/health
+```
+
+Returns:
+
+```json
+{
+  "success": true,
+  "data": {
+    "status": "ok",
+    "uptime": 123.45,
+    "minAppVersion": "1.0.0",
+    "latestAppVersion": "1.0.0",
+    "updateUrl": "https://github.com/your-org-or-user/Raha/releases"
+  }
+}
+```
+
+The health payload also carries app-update metadata used by the Flutter client:
+
+- `minAppVersion`
+- `latestAppVersion`
+- `updateUrl`

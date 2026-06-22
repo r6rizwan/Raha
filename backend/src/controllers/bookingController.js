@@ -19,3 +19,16 @@ exports.myBookings = async (req, res, next) => {
     res.json({ success: true, data: bookings.map((b) => ({ ...b.toObject(), providerName: b.providerId?.name || '' })) });
   } catch (err) { next(err); }
 };
+
+exports.cancelBooking = async (req, res, next) => {
+  try {
+    const user = await User.findOne({ firebaseUid: req.user.uid }).select('_id');
+    if (!user) return res.status(404).json({ success: false, error: 'User not found' });
+    const booking = await Booking.findOne({ _id: req.params.id, userId: user._id });
+    if (!booking) return res.status(404).json({ success: false, error: 'Booking not found' });
+    if (booking.status === 'cancelled') return res.status(400).json({ success: false, error: 'Booking already cancelled' });
+    booking.status = 'cancelled';
+    await booking.save();
+    res.json({ success: true, data: { id: booking._id, status: booking.status } });
+  } catch (err) { next(err); }
+};

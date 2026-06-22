@@ -1,100 +1,131 @@
-# Raha Mobile App
+# Raha Frontend
 
-The frontend of the Raha platform, built with **Flutter** and **Dart**. The app is optimized for expats in the UAE, providing them with a user-friendly interface to configure their profiles, discover local cuisines, book services, and get AI-powered concierge recommendations.
+Flutter mobile app for Raha. It helps expats discover home-style food, book services, and get AI-powered recommendations.
 
----
+## Features
 
-## 🚀 Key Features
+- Firebase Auth with Google Sign-In and email/password
+- Onboarding flow for nationality, city, neighbourhood, and interests
+- Stateful bottom-tab navigation with Home, Food, Services, and Profile
+- Food discovery by city and cuisine with live place detail enrichment
+- Service booking flow with booking history and cancellation
+- Edit profile screen for name, city, neighbourhood, and nationality
+- App update checker backed by the backend `/health` endpoint
+- Branded splash screen and launcher icons
 
-* **Expat Onboarding**: Interactive profile setup capturing nationality, city, neighborhood, and interests.
-* **AI Concierge Dashboard**: A dynamic homepage displaying personalized recommendations (restaurants, services, and expat tips) powered by Gemini.
-* **Cuisine Discovery**: Search and filter options for authentic home cuisines, with detail views enriched by the Google Places API.
-* **Service Booking**: Intuitive listing of verified service providers (cleaners, handymen) and a booking scheduling flow.
-* **Firebase Authentication**: Secure client-side authentication with email/password signup and login.
+## Stack
 
----
+- Flutter 3 / Dart 3.11+
+- Riverpod
+- GoRouter
+- Dio
+- Firebase Core + Firebase Auth
+- Google Sign-In
+- Flutter Secure Storage
+- Cached Network Image
+- Shimmer
+- url_launcher
 
-## 🛠️ Tech Stack & Libraries
-
-* **State Management**: [Riverpod](https://pub.dev/packages/flutter_riverpod) and `riverpod_generator` for clean, modular, and reactive state management.
-* **Navigation & Routing**: [GoRouter](https://pub.dev/packages/go_router) for declarative routing and deep link support.
-* **HTTP Client**: [Dio](https://pub.dev/packages/dio) / Http client for robust connection handling and interceptors.
-* **Authentication**: [Firebase Auth Client](https://pub.dev/packages/firebase_auth) for secure credentials management.
-
----
-
-## 📂 Feature Directory Layout (`lib/`)
-
-The application codebase follows a feature-first structure:
+## Project Layout
 
 ```txt
+lib/
 ├── core/
-│   ├── config/          # Configurations and environment setups
-│   ├── constants/       # App-wide UI constants, colors, and strings
-│   ├── errors/          # Exception handling and API error mappings
-│   ├── router/          # Declared app routes via GoRouter
-│   └── theme/           # Premium dark/light themes and typographies
-│
+│   ├── constants/
+│   ├── errors/
+│   ├── router/
+│   └── theme/
 ├── data/
-│   ├── models/          # Data schemas and serialization (JSON parsing)
-│   ├── repositories/    # Repositories for data queries and mutations
-│   └── services/        # Low-level clients (API HTTP client, Cache service)
-│
+│   ├── models/
+│   ├── repositories/
+│   └── services/
 ├── features/
-│   ├── auth/            # Sign in, registration, and password recovery
-│   ├── home/            # Recommendations dashboard and newsfeed
-│   ├── onboarding/      # Profile configuration wizard
-│   ├── food/            # Food spot discovery, search, and maps detail UI
-│   ├── services/        # Service providers list and reservation booking
-│   └── profile/         # Expat settings and preferences
-│
+│   ├── auth/
+│   ├── food/
+│   ├── home/
+│   ├── onboarding/
+│   ├── profile/
+│   └── services/
 └── shared/
-    └── widgets/         # Shared UI buttons, loaders, and input fields
+    └── widgets/
 ```
 
----
+## Setup
 
-## ⚙️ Setup & Local Execution
+### Requirements
 
-### Prerequisites
-* [Flutter SDK](https://docs.flutter.dev/get-started/install) (latest stable channel)
-* Xcode (for iOS builds, macOS only)
-* Android Studio / SDK (for Android builds)
+- Flutter stable
+- Android Studio / Android SDK
+- Xcode for iOS builds on macOS
+- A Firebase project with Android and iOS apps configured
 
-### 1. Retrieve Packages
-Fetch the required pub dependencies:
+### Install dependencies
+
 ```sh
+cd frontend
 flutter pub get
 ```
 
-### 2. Configure Firebase Projects
-Download and place your Firebase client config files inside the platform folders:
-* **Android**: [android/app/google-services.json](file:///Users/rizwan/Documents/GitHub/Raha/frontend/android/app/google-services.json)
-* **iOS**: [ios/Runner/GoogleService-Info.plist](file:///Users/rizwan/Documents/GitHub/Raha/frontend/ios/Runner/GoogleService-Info.plist)
+### Firebase files
 
-### 3. Run the App
-To run the app against a local backend, define the `BASE_URL` pointing to your API server. 
+Place the Firebase client config files here:
 
-**Android Emulator (connecting to host localhost API):**
+- `android/app/google-services.json`
+- `ios/Runner/GoogleService-Info.plist`
+
+Android package name:
+
+```txt
+com.raha.mobile
+```
+
+### Base URL
+
+The app reads the backend URL from `--dart-define=BASE_URL=...`.
+
+Android emulator:
+
 ```sh
 flutter run --dart-define=BASE_URL=http://10.0.2.2:5000
 ```
 
-**iOS Simulator or Web browser:**
+iOS simulator:
+
 ```sh
 flutter run --dart-define=BASE_URL=http://localhost:5000
 ```
 
----
-
-## 🧪 Quality Assurance & Testing
-
-Maintain clean code quality and run the built-in tests:
+Release example:
 
 ```sh
-# Perform static code analysis
-flutter analyze
+flutter build apk --release --split-per-abi \
+  --obfuscate --split-debug-info=build/debug-info \
+  --dart-define=BASE_URL=https://your-production-api.example
+```
 
-# Run unit and widget tests
+Local helper from repo root:
+
+```sh
+chmod +x build_apk.sh
+./build_apk.sh
+```
+
+This writes the APK to:
+
+```txt
+build_artifacts/raha-v<version>.apk
+```
+
+## Quality checks
+
+```sh
+flutter analyze
 flutter test
 ```
+
+## Notes
+
+- The app expects the backend `/health` endpoint to return `minAppVersion`, `latestAppVersion`, and `updateUrl`.
+- The repo also exposes `/api/health` for the backend keep-warm GitHub Action.
+- Native splash and launcher icons are configured through `flutter_native_splash` and `flutter_launcher_icons`.
+- Production builds should use an HTTPS backend URL.

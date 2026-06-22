@@ -26,7 +26,7 @@ class FoodRepository {
     FoodFilter filter,
     int page,
   ) async {
-    final cacheKey = 'food:${filter.city}:${filter.cuisine ?? 'all'}:$page';
+    final cacheKey = 'food:v2:${filter.city}:${filter.cuisine ?? 'all'}:$page';
     try {
       final r = await _api.dio.get(
         '/api/food',
@@ -56,7 +56,7 @@ class FoodRepository {
   }
 
   Future<Either<Failure, FoodSpotModel>> getFoodSpot(String id) async {
-    final cacheKey = 'food-spot:$id';
+    final cacheKey = 'food-spot:v2:$id';
     try {
       final r = await _api.dio.get('/api/food/$id');
       final data = FoodSpotModel.fromJson(r.data['data']);
@@ -77,7 +77,7 @@ class FoodRepository {
   Future<Either<Failure, FoodSpotDetailsModel>> getFoodPlaceDetails(
     String id,
   ) async {
-    final cacheKey = 'food-place:$id';
+    final cacheKey = 'food-place:v2:$id';
     try {
       final r = await _api.dio.get('/api/food/$id/place');
       final data = FoodSpotDetailsModel.fromJson(r.data['data']);

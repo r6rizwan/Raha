@@ -65,4 +65,15 @@ class BookingRepository {
       return Left(UnknownFailure(e.toString()));
     }
   }
+
+  Future<Either<Failure, void>> cancelBooking(String bookingId) async {
+    try {
+      await _api.dio.patch('/api/bookings/$bookingId/cancel');
+      return const Right(null);
+    } on DioException catch (e) {
+      return Left(failureFromDio(e));
+    } catch (e) {
+      return Left(UnknownFailure(e.toString()));
+    }
+  }
 }
