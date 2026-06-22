@@ -20,6 +20,12 @@ services:
         sync: false
       - key: GOOGLE_APPLICATION_CREDENTIALS
         sync: false
+      - key: MIN_APP_VERSION
+        value: 1.0.0
+      - key: LATEST_APP_VERSION
+        value: 1.0.0
+      - key: UPDATE_URL
+        sync: false
       - key: ALLOWED_ORIGINS
         sync: false
       - key: RATE_LIMIT_WINDOW_MS

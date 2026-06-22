@@ -21,3 +21,7 @@ backend/serviceAccountKey.json
 backend/*firebase-adminsdk*.json
 .DS_Store
 .idea/
+
+upload-keystore.jks
+*.jks
+*.keystore
