@@ -25,3 +25,5 @@ backend/*firebase-adminsdk*.json
 upload-keystore.jks
 *.jks
 *.keystore
+build_artifacts/
+*.apk
