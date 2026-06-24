@@ -79,20 +79,27 @@ Android package name:
 com.raha.mobile
 ```
 
-### Base URL
+### Base URL & Google Sign-In
 
-The app reads the backend URL from `--dart-define=BASE_URL=...`.
+The app reads configuration variables from `--dart-define`.
 
-Android emulator:
+- `BASE_URL`: The backend server URL.
+- `GOOGLE_WEB_CLIENT_ID`: The Web Client ID from the Firebase/Google Cloud Console (needed to prevent `clientConfigurationError` on Android).
+
+Android emulator run example:
 
 ```sh
-flutter run --dart-define=BASE_URL=http://10.0.2.2:5000
+flutter run \
+  --dart-define=BASE_URL=http://10.0.2.2:5000 \
+  --dart-define=GOOGLE_WEB_CLIENT_ID=your_web_client_id.apps.googleusercontent.com
 ```
 
-iOS simulator:
+iOS simulator run example:
 
 ```sh
-flutter run --dart-define=BASE_URL=http://localhost:5000
+flutter run \
+  --dart-define=BASE_URL=http://localhost:5000 \
+  --dart-define=GOOGLE_WEB_CLIENT_ID=your_web_client_id.apps.googleusercontent.com
 ```
 
 Release example:

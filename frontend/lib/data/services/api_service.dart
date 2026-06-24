@@ -27,6 +27,9 @@ class ApiService {
     dio.interceptors.add(
       InterceptorsWrapper(
         onRequest: (options, handler) async {
+          if (options.path == '/health' || options.path == '/api/health') {
+            return handler.next(options);
+          }
           final token = await FirebaseAuth.instance.currentUser?.getIdToken();
           if (token == null) {
             return handler.reject(

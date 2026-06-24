@@ -47,8 +47,10 @@ class UpdateCheckerService {
 /// Helper method to compare two semantic version strings (e.g. "1.0.1" and "1.0.0").
 /// Returns positive if v1 > v2, negative if v1 < v2, and 0 if v1 == v2.
 int compareVersion(String v1, String v2) {
-  final v1Parts = v1.split('.').map(int.parse).toList();
-  final v2Parts = v2.split('.').map(int.parse).toList();
+  final cleanV1 = v1.split('+')[0].split('-')[0];
+  final cleanV2 = v2.split('+')[0].split('-')[0];
+  final v1Parts = cleanV1.split('.').map((s) => int.tryParse(s) ?? 0).toList();
+  final v2Parts = cleanV2.split('.').map((s) => int.tryParse(s) ?? 0).toList();
   for (var i = 0; i < 3; i++) {
     final part1 = i < v1Parts.length ? v1Parts[i] : 0;
     final part2 = i < v2Parts.length ? v2Parts[i] : 0;

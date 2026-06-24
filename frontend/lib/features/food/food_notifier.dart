@@ -31,7 +31,10 @@ class FoodNotifier extends AsyncNotifier<PaginatedFoodModel> {
         .read(foodRepositoryProvider)
         .getFoodSpots(filter, current.page + 1);
     next.match(
-      (l) => state = AsyncError(l, StackTrace.current),
+      (l) {
+        // Keep current data so user doesn't lose their scrolled list upon a transient load-more error
+        state = AsyncData(current);
+      },
       (r) => state = AsyncData(
         current.copyWith(
           spots: [...current.spots, ...r.spots],

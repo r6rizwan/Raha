@@ -33,7 +33,10 @@ class ServicesNotifier extends AsyncNotifier<PaginatedProvidersModel> {
         .read(serviceRepositoryProvider)
         .getProviders(filter, current.page + 1);
     next.match(
-      (l) => state = AsyncError(l, StackTrace.current),
+      (l) {
+        // Keep current data so user doesn't lose their scrolled list upon a transient load-more error
+        state = AsyncData(current);
+      },
       (r) => state = AsyncData(
         current.copyWith(
           providers: [...current.providers, ...r.providers],

@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import '../../core/constants/app_constants.dart';
 
 final authServiceProvider = Provider<AuthService>((ref) => AuthService());
 
@@ -23,16 +24,32 @@ class AuthService {
     return cred;
   }
 
-  Future<UserCredential> signInWithGoogle() async {
-    if (!_googleReady) {
-      await GoogleSignIn.instance.initialize();
-      _googleReady = true;
+  Future<UserCredential?> signInWithGoogle() async {
+    try {
+      if (!_googleReady) {
+        await GoogleSignIn.instance.initialize(
+          serverClientId: AppConstants.googleWebClientId.isNotEmpty
+              ? AppConstants.googleWebClientId
+              : null,
+        );
+        _googleReady = true;
+      }
+      final account = await GoogleSignIn.instance.authenticate();
+
+      final credential = GoogleAuthProvider.credential(
+        idToken: account.authentication.idToken,
+      );
+      return await _auth.signInWithCredential(credential);
+    } catch (e) {
+      final errString = e.toString().toLowerCase();
+      if (errString.contains('canceled') ||
+          errString.contains('cancelled') ||
+          errString.contains('sign_in_failed') ||
+          errString.contains('12501')) {
+        return null; // Return null on user cancel without throwing an error
+      }
+      rethrow;
     }
-    final account = await GoogleSignIn.instance.authenticate();
-    final credential = GoogleAuthProvider.credential(
-      idToken: account.authentication.idToken,
-    );
-    return _auth.signInWithCredential(credential);
   }
 
   Future<void> signOut() async {
