@@ -254,7 +254,12 @@ async function seed() {
   // Food seed is Dubai-only fallback; live data comes from syncPlacesFood.js
   if (city === 'Dubai') {
     await FoodSpot.deleteMany({ source: 'seed' });
-    await FoodSpot.insertMany(foods.map((f) => ({ ...f, city: 'Dubai' })));
+    const uniqueFoods = Array.from(
+      new Map(
+        foods.map((food) => [food.googlePlaceId, { ...food, city: 'Dubai' }]),
+      ).values(),
+    );
+    await FoodSpot.insertMany(uniqueFoods);
     console.log('Seeded food fallback data for Dubai');
   }
 
