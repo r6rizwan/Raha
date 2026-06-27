@@ -259,7 +259,9 @@ async function seed() {
         foods.map((food) => [food.googlePlaceId, { ...food, city: 'Dubai' }]),
       ).values(),
     );
-    await FoodSpot.insertMany(uniqueFoods);
+    await FoodSpot.insertMany(uniqueFoods, { ordered: false }).catch((err) => {
+      if (err?.code !== 11000) throw err;
+    });
     console.log('Seeded food fallback data for Dubai');
   }
 
