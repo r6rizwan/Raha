@@ -21,6 +21,7 @@ const app = express();
 requireEnv(['MONGO_URI', 'FIREBASE_PROJECT_ID']);
 initializeFirebaseAdmin();
 
+app.set('trust proxy', 1);
 app.use(helmet());
 app.use(cors({ origin: allowedOrigins() }));
 app.use(express.json());
