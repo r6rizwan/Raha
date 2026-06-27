@@ -8,7 +8,8 @@ module.exports = async function verifyToken(req, res, next) {
     const decoded = await admin.auth().verifyIdToken(token);
     req.user = { uid: decoded.uid, email: decoded.email };
     next();
-  } catch (_) {
+  } catch (err) {
+    console.error('verifyToken failed:', err.message);
     res.status(401).json({ success: false, error: 'Unauthorized' });
   }
 };
