@@ -38,6 +38,26 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
 
   @override
   Widget build(BuildContext context) {
+    ref.listen<AsyncValue<void>>(onboardingNotifierProvider, (previous, next) {
+      if (!context.mounted) return;
+
+      if (next.hasError && !next.isLoading) {
+        final error = next.error;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              error is Failure ? error.message : 'Something went wrong',
+            ),
+          ),
+        );
+        return;
+      }
+
+      if (previous?.isLoading == true && next.hasValue) {
+        context.go(AppRoutes.home);
+      }
+    });
+
     final loading = ref.watch(onboardingNotifierProvider).isLoading;
 
     return Scaffold(
@@ -189,8 +209,8 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                             ),
                             onPressed: loading
                                 ? null
-                                : () async {
-                                    await ref
+                                : () {
+                                    ref
                                         .read(
                                           onboardingNotifierProvider.notifier,
                                         )
@@ -204,27 +224,6 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                                               .where((e) => e.isNotEmpty)
                                               .toList(),
                                         );
-                                    if (!context.mounted) return;
-                                    final state = ref.read(
-                                      onboardingNotifierProvider,
-                                    );
-                                    if (state.hasError) {
-                                      final error = state.error;
-                                      ScaffoldMessenger.of(context).showSnackBar(
-                                        SnackBar(
-                                          content: Text(
-                                            error is Failure
-                                                ? error.message
-                                                : 'Something went wrong',
-                                          ),
-                                        ),
-                                      );
-                                      return;
-                                    }
-
-                                    if (context.mounted) {
-                                      context.go(AppRoutes.home);
-                                    }
                                   },
                             child: loading
                                 ? const SizedBox(
