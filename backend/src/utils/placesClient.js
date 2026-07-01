@@ -65,11 +65,30 @@ async function getPlaceDetails(placeId) {
     rating: data.rating || 0,
     userRatingCount: data.userRatingCount || 0,
     openingHours: data.currentOpeningHours?.weekdayDescriptions || [],
-    photoNames: (data.photos || []).slice(0, 5).map((photo) => {
-      if (!photo.name) return null;
-      return `https://places.googleapis.com/v1/${photo.name}/media?maxHeightPx=600&maxWidthPx=900&key=${process.env.GOOGLE_PLACES_API_KEY}`;
-    }).filter(Boolean),
+    photoNames: (data.photos || []).map((photo) => photo.name).filter(Boolean).slice(0, 5),
   };
 }
 
-module.exports = { getPlaceDetails, searchText };
+async function getPhotoMedia(photoName) {
+  requirePlacesKey();
+  const response = await fetch(
+    `https://places.googleapis.com/v1/${photoName}/media?maxHeightPx=600&maxWidthPx=900&skipHttpRedirect=true`,
+    {
+      headers: {
+        'X-Goog-Api-Key': process.env.GOOGLE_PLACES_API_KEY,
+      },
+    },
+  );
+
+  if (!response.ok) {
+    throw new Error(`Google Places photo failed with ${response.status}`);
+  }
+
+  return {
+    buffer: Buffer.from(await response.arrayBuffer()),
+    contentType: response.headers.get('content-type') || 'image/jpeg',
+    cacheControl: response.headers.get('cache-control') || 'public, max-age=3600',
+  };
+}
+
+module.exports = { getPlaceDetails, getPhotoMedia, searchText };

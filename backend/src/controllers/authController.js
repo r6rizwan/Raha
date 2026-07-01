@@ -5,7 +5,15 @@ exports.saveProfile = async (req, res, next) => {
     const { nationality, city, neighbourhood, interestTags = [], name } = req.body;
     const user = await User.findOneAndUpdate(
       { firebaseUid: req.user.uid },
-      { firebaseUid: req.user.uid, email: req.user.email, name, nationality, city, neighbourhood, interestTags },
+      {
+        firebaseUid: req.user.uid,
+        email: req.user.email,
+        name: name || req.user.name || req.user.email?.split('@').first || '',
+        nationality,
+        city,
+        neighbourhood,
+        interestTags,
+      },
       { upsert: true, new: true, setDefaultsOnInsert: true }
     ).select('-__v');
     res.status(201).json({ success: true, data: user });

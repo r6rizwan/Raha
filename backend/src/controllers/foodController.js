@@ -1,5 +1,5 @@
 const FoodSpot = require('../models/FoodSpot');
-const { getPlaceDetails } = require('../utils/placesClient');
+const { getPhotoMedia, getPlaceDetails } = require('../utils/placesClient');
 
 function foodQuery(req) {
   const query = { city: req.query.city, isActive: true };
@@ -40,7 +40,33 @@ exports.getFoodPlaceDetails = async (req, res, next) => {
     const spot = await FoodSpot.findById(req.params.id).select('-__v -rawGooglePlace');
     if (!spot) return res.status(404).json({ success: false, error: 'Food spot not found' });
     const place = await getPlaceDetails(spot.googlePlaceId);
-    res.json({ success: true, data: { spot, place } });
+    const host = req.get('host');
+    const protocol = req.get('x-forwarded-proto') || req.protocol;
+    const placeWithProxyPhotos = place == null
+      ? null
+      : {
+          ...place,
+          photoNames: place.photoNames.map(
+            (photoName) =>
+              `${protocol}://${host}/api/food/photo?name=${encodeURIComponent(photoName)}`,
+          ),
+        };
+    res.json({ success: true, data: { spot, place: placeWithProxyPhotos } });
+  } catch (err) {
+    next(err);
+  }
+};
+
+exports.getFoodPhoto = async (req, res, next) => {
+  try {
+    const photoName = req.query.name;
+    if (!photoName) {
+      return res.status(400).json({ success: false, error: 'Photo name is required' });
+    }
+    const media = await getPhotoMedia(photoName);
+    res.set('Content-Type', media.contentType);
+    res.set('Cache-Control', media.cacheControl);
+    res.send(media.buffer);
   } catch (err) {
     next(err);
   }

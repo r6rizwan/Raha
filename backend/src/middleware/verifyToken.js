@@ -6,10 +6,9 @@ module.exports = async function verifyToken(req, res, next) {
     const [scheme, token] = header.split(' ');
     if (scheme !== 'Bearer' || !token) return res.status(401).json({ success: false, error: 'Unauthorized' });
     const decoded = await admin.auth().verifyIdToken(token);
-    req.user = { uid: decoded.uid, email: decoded.email };
+    req.user = { uid: decoded.uid, email: decoded.email, name: decoded.name };
     next();
-  } catch (err) {
-    console.error('verifyToken failed:', err.message);
+  } catch (_) {
     res.status(401).json({ success: false, error: 'Unauthorized' });
   }
 };
