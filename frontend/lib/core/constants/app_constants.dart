@@ -1,7 +1,7 @@
 class AppConstants {
   static const pageSize = 10;
-  static const connectTimeoutSeconds = 10;
-  static const receiveTimeoutSeconds = 15;
+  static const connectTimeoutSeconds = 60;  // Render free tier can take ~50s to cold start
+  static const receiveTimeoutSeconds = 60;
 
   // Google Sign-In Web Client ID (required for Android)
   // Can be set here or passed via --dart-define=GOOGLE_WEB_CLIENT_ID=your_client_id

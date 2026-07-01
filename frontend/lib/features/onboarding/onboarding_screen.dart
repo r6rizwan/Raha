@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/constants/nationalities.dart';
+import '../../core/errors/failures.dart';
 import '../../core/router/app_router.dart';
 import 'onboarding_notifier.dart';
 import '../../core/theme/app_theme.dart';
@@ -203,10 +204,25 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                                               .where((e) => e.isNotEmpty)
                                               .toList(),
                                         );
-                                    if (context.mounted &&
-                                        !ref
-                                            .read(onboardingNotifierProvider)
-                                            .hasError) {
+                                    if (!context.mounted) return;
+                                    final state = ref.read(
+                                      onboardingNotifierProvider,
+                                    );
+                                    if (state.hasError) {
+                                      final error = state.error;
+                                      ScaffoldMessenger.of(context).showSnackBar(
+                                        SnackBar(
+                                          content: Text(
+                                            error is Failure
+                                                ? error.message
+                                                : 'Something went wrong',
+                                          ),
+                                        ),
+                                      );
+                                      return;
+                                    }
+
+                                    if (context.mounted) {
                                       context.go(AppRoutes.home);
                                     }
                                   },

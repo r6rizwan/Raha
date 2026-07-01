@@ -11,6 +11,7 @@
 - AI-personalised home recommendations with Gemini 2.0 Flash
 - Food discovery by cuisine and city
 - Live food data via Google Places API
+- Google Places photos proxied through the backend
 - Multi-city support including Dubai, Jeddah, Riyadh, and Abu Dhabi
 - Food detail with hours, rating, district, and photos
 - Expandable weekly opening hours
@@ -49,6 +50,14 @@ flutter pub get
 
 - Backend setup: [backend/README.md](/Users/rizwan/Documents/GitHub/Raha/backend/README.md)
 - Frontend setup: [frontend/README.md](/Users/rizwan/Documents/GitHub/Raha/frontend/README.md)
+
+Required backend env vars include:
+
+- `MONGO_URI`
+- `FIREBASE_PROJECT_ID`
+- `GOOGLE_APPLICATION_CREDENTIALS`
+- `GEMINI_API_KEY`
+- `GOOGLE_PLACES_API_KEY`
 
 ---
 
@@ -102,3 +111,8 @@ Android debug build:
 ```sh
 flutter build apk --debug --dart-define=BASE_URL=http://10.0.2.2:5000
 ```
+
+## Runtime Notes
+
+- Home recommendations are fetched from the backend, not hardcoded in the app.
+- Food detail images are loaded through the backend photo proxy at `/api/food/photo`.

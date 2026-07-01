@@ -36,15 +36,19 @@ class AuthService {
       }
       final account = await GoogleSignIn.instance.authenticate();
 
+      final auth = account.authentication;
+      if (auth.idToken == null) {
+        throw Exception('Google Sign-In failed: ID Token is null. Please verify your Web Client ID and SHA-1 settings.');
+      }
+
       final credential = GoogleAuthProvider.credential(
-        idToken: account.authentication.idToken,
+        idToken: auth.idToken,
       );
       return await _auth.signInWithCredential(credential);
     } catch (e) {
       final errString = e.toString().toLowerCase();
       if (errString.contains('canceled') ||
           errString.contains('cancelled') ||
-          errString.contains('sign_in_failed') ||
           errString.contains('12501')) {
         return null; // Return null on user cancel without throwing an error
       }

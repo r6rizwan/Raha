@@ -39,16 +39,18 @@ final routerProvider = Provider<GoRouter>(
       final auth = authState.value;
       final profile = ref.read(userProfileProvider);
       final loc = state.matchedLocation;
+
       if (auth == null) return loc == AppRoutes.login ? null : AppRoutes.login;
       if (loc == AppRoutes.login || loc == AppRoutes.splash) return AppRoutes.home;
-      if (profile.hasValue &&
-          profile.value == null &&
-          loc != AppRoutes.onboarding) {
+
+      // If the profile is still loading or errored (e.g. backend cold-start),
+      // stay where we are — do NOT redirect to login.
+      if (!profile.hasValue) return null;
+
+      if (profile.value == null && loc != AppRoutes.onboarding) {
         return AppRoutes.onboarding;
       }
-      if (profile.hasValue &&
-          profile.value != null &&
-          loc == AppRoutes.onboarding) {
+      if (profile.value != null && loc == AppRoutes.onboarding) {
         return AppRoutes.home;
       }
       return null;

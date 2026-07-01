@@ -30,6 +30,12 @@ RATE_LIMIT_WINDOW_MS=900000
 RATE_LIMIT_MAX=100
 ```
 
+Notes:
+
+- `GOOGLE_APPLICATION_CREDENTIALS` should point to your Firebase Admin service account JSON file.
+- `GOOGLE_PLACES_API_KEY` is used only by the backend for Places sync and photo proxy requests.
+- On Render or other reverse-proxy hosts, the app enables `trust proxy` so rate limiting works correctly.
+
 ## Commands
 
 ```sh
@@ -79,6 +85,14 @@ Food record source behavior:
 - `seed`: sample fallback records
 
 The food API serves live/manual records first. Seed records are only a fallback when no live/manual records exist for the query.
+
+## Google Places Photo Proxy
+
+The Flutter app does not call Google Places photo URLs directly.
+
+- Place detail responses return backend photo proxy URLs
+- The proxy endpoint is `GET /api/food/photo?name=<photoName>`
+- This keeps the Google Places server key on the backend only
 
 ## Development Seed Data
 
