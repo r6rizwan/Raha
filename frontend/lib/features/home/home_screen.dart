@@ -32,7 +32,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      performVersionCheck(context, ref, '1.0.0');
+      performVersionCheck(context, ref, '1.0.1');
     });
   }
 
