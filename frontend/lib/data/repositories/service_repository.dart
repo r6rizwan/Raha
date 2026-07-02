@@ -49,7 +49,7 @@ class ServiceRepository {
       if (cached != null) return Right(cached);
       return Left(failureFromDio(e));
     } catch (e) {
-      return Left(UnknownFailure(e.toString()));
+      return Left(unexpectedFailure('load service providers'));
     }
   }
 
@@ -68,7 +68,7 @@ class ServiceRepository {
       if (cached != null) return Right(cached);
       return Left(failureFromDio(e));
     } catch (e) {
-      return Left(UnknownFailure(e.toString()));
+      return Left(unexpectedFailure('load this service provider'));
     }
   }
 }

@@ -150,6 +150,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                         _buildFieldLabel('CITY'),
                         TextField(
                           controller: city,
+                          textCapitalization: TextCapitalization.words,
                           style: const TextStyle(
                             color: textColor,
                             fontSize: 14,
@@ -163,6 +164,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                         _buildFieldLabel('NEIGHBOURHOOD'),
                         TextField(
                           controller: neighbourhood,
+                          textCapitalization: TextCapitalization.words,
                           style: const TextStyle(
                             color: textColor,
                             fontSize: 14,
@@ -178,6 +180,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                         _buildFieldLabel('INTERESTS'),
                         TextField(
                           controller: tags,
+                          textCapitalization: TextCapitalization.words,
                           style: const TextStyle(
                             color: textColor,
                             fontSize: 14,

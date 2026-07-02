@@ -55,7 +55,7 @@ class AuthRepository {
     } on DioException catch (e) {
       return Left(failureFromDio(e));
     } catch (e) {
-      return Left(UnknownFailure(e.toString()));
+      return Left(unexpectedFailure('save your profile'));
     }
   }
 
@@ -68,7 +68,7 @@ class AuthRepository {
     } on DioException catch (e) {
       return Left(failureFromDio(e));
     } catch (e) {
-      return Left(UnknownFailure(e.toString()));
+      return Left(unexpectedFailure('load your profile'));
     }
   }
 }

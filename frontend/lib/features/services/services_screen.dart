@@ -85,6 +85,7 @@ class _ServicesScreenState extends ConsumerState<ServicesScreen> {
                                 controller: _searchController,
                                 focusNode: _searchFocus,
                                 autofocus: true,
+                                textCapitalization: TextCapitalization.words,
                                 style: const TextStyle(
                                   fontSize: 15,
                                   color: Colors.white,

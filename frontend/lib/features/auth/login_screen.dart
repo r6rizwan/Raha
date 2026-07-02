@@ -49,7 +49,10 @@ class LoginNotifier extends Notifier<LoginState> {
       await task();
       state = state.copyWith(isLoading: false);
     } catch (e) {
-      state = state.copyWith(isLoading: false, errorMessage: e.toString());
+      state = state.copyWith(
+        isLoading: false,
+        errorMessage: authErrorMessage(e),
+      );
     }
   }
 }
@@ -64,6 +67,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   final email = TextEditingController();
   final password = TextEditingController();
   final name = TextEditingController();
+  bool _showPassword = false;
 
   @override
   void dispose() {
@@ -187,6 +191,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           if (signUp) ...[
                             TextField(
                               controller: name,
+                              textCapitalization: TextCapitalization.words,
                               decoration: const InputDecoration(
                                 labelText: 'Name',
                               ),
@@ -202,9 +207,21 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           const SizedBox(height: 12),
                           TextField(
                             controller: password,
-                            obscureText: true,
-                            decoration: const InputDecoration(
+                            obscureText: !_showPassword,
+                            decoration: InputDecoration(
                               labelText: 'Password',
+                              suffixIcon: IconButton(
+                                onPressed: () {
+                                  setState(() {
+                                    _showPassword = !_showPassword;
+                                  });
+                                },
+                                icon: Icon(
+                                  _showPassword
+                                      ? Icons.visibility_off_rounded
+                                      : Icons.visibility_rounded,
+                                ),
+                              ),
                             ),
                           ),
                           const SizedBox(height: 18),

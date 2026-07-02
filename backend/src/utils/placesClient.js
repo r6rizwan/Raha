@@ -84,9 +84,28 @@ async function getPhotoMedia(photoName) {
     throw new Error(`Google Places photo failed with ${response.status}`);
   }
 
+  const contentType = response.headers.get('content-type') || '';
+  if (contentType.includes('application/json')) {
+    const data = await response.json();
+    if (!data.photoUri) {
+      throw new Error('Google Places photo response did not include a photoUri');
+    }
+
+    const redirected = await fetch(data.photoUri);
+    if (!redirected.ok) {
+      throw new Error(`Google Places redirected photo failed with ${redirected.status}`);
+    }
+
+    return {
+      buffer: Buffer.from(await redirected.arrayBuffer()),
+      contentType: redirected.headers.get('content-type') || 'image/jpeg',
+      cacheControl: redirected.headers.get('cache-control') || 'public, max-age=3600',
+    };
+  }
+
   return {
     buffer: Buffer.from(await response.arrayBuffer()),
-    contentType: response.headers.get('content-type') || 'image/jpeg',
+    contentType: contentType || 'image/jpeg',
     cacheControl: response.headers.get('cache-control') || 'public, max-age=3600',
   };
 }

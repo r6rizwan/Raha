@@ -188,10 +188,12 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
     required TextEditingController controller,
     required String label,
     required IconData icon,
+    TextCapitalization textCapitalization = TextCapitalization.words,
     String? Function(String?)? validator,
   }) {
     return TextFormField(
       controller: controller,
+      textCapitalization: textCapitalization,
       validator: validator,
       style: const TextStyle(
         fontSize: 15,

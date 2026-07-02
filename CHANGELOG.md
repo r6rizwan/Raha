@@ -2,6 +2,14 @@
 
 All notable changes to Raha should be documented in this file.
 
+## v1.0.2
+
+- Fixed Google Places photo proxy responses so food detail images load as real image bytes instead of invalid JSON payloads
+- Improved user-facing error messages across login, onboarding, bookings, and network failures
+- Added automatic text capitalization for user-friendly text inputs
+- Added password show/hide toggle on the login and sign-up password field
+- Expanded the home screen with richer live sections, utility modules, and stronger visual hierarchy
+
 ## v1.0.1
 
 - Fixed onboarding continue flow getting stuck on loading after profile save

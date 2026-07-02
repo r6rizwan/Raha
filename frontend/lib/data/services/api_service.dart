@@ -72,16 +72,34 @@ class ApiService {
 }
 
 Failure failureFromDio(DioException e) {
+  if (e.type == DioExceptionType.cancel) {
+    return const AuthFailure('Please sign in again to continue.');
+  }
   if (e.response?.statusCode == 429) {
-    return const RateLimitFailure('Too many requests');
+    return const RateLimitFailure(
+      'Too many requests right now. Please wait a moment and try again.',
+    );
   }
   if ((e.response?.statusCode ?? 0) >= 500) {
-    return const ServerFailure('Server error');
+    return const ServerFailure(
+      'Our server is having trouble right now. Please try again shortly.',
+    );
   }
-  if (e.response?.statusCode == 401) return const AuthFailure('Unauthorized');
+  if (e.response?.statusCode == 401) {
+    return const AuthFailure('Your session expired. Please sign in again.');
+  }
+  if (e.type == DioExceptionType.connectionError) {
+    return const NetworkFailure(
+      'Unable to reach the server. Check your internet connection and try again.',
+    );
+  }
   if (e.type == DioExceptionType.connectionTimeout ||
       e.type == DioExceptionType.receiveTimeout) {
-    return const NetworkFailure('Connection timed out');
+    return const NetworkFailure(
+      'The connection is taking too long. Please try again.',
+    );
   }
-  return NetworkFailure(e.message ?? 'Something went wrong');
+  return const NetworkFailure(
+    'We could not connect right now. Please try again.',
+  );
 }

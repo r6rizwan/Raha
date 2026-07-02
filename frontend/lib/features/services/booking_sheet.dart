@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import '../../core/errors/failures.dart';
 import '../../data/models/service_provider_model.dart';
 import '../profile/bookings_notifier.dart';
 import '../../core/theme/app_theme.dart';
@@ -222,6 +223,7 @@ class _BookingSheetState extends ConsumerState<BookingSheet> {
           TextField(
             controller: notes,
             maxLines: 3,
+            textCapitalization: TextCapitalization.sentences,
             style: const TextStyle(
               fontSize: 13,
               color: textColor,
@@ -320,7 +322,7 @@ class _BookingSheetState extends ConsumerState<BookingSheet> {
                         if (context.mounted) {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
-                              content: Text(e.toString()),
+                              content: Text(friendlyMessageForError(e)),
                               backgroundColor: Colors.redAccent,
                             ),
                           );

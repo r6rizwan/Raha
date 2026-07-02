@@ -39,7 +39,7 @@ class BookingRepository {
     } on DioException catch (e) {
       return Left(failureFromDio(e));
     } catch (e) {
-      return Left(UnknownFailure(e.toString()));
+      return Left(unexpectedFailure('create your booking'));
     }
   }
 
@@ -62,7 +62,7 @@ class BookingRepository {
       if (cached != null) return Right(cached);
       return Left(failureFromDio(e));
     } catch (e) {
-      return Left(UnknownFailure(e.toString()));
+      return Left(unexpectedFailure('load your bookings'));
     }
   }
 
@@ -73,7 +73,7 @@ class BookingRepository {
     } on DioException catch (e) {
       return Left(failureFromDio(e));
     } catch (e) {
-      return Left(UnknownFailure(e.toString()));
+      return Left(unexpectedFailure('cancel your booking'));
     }
   }
 }

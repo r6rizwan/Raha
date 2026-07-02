@@ -28,3 +28,18 @@ class NotFoundFailure extends Failure {
 class UnknownFailure extends Failure {
   const UnknownFailure(super.message);
 }
+
+UnknownFailure unexpectedFailure(String action) =>
+    UnknownFailure('We could not $action right now. Please try again.');
+
+String friendlyMessageForError(
+  Object error, {
+  String fallback = 'Something went wrong. Please try again.',
+}) {
+  if (error is Failure) return error.message;
+  final text = error.toString().trim();
+  if (text.startsWith('Exception: ')) {
+    return text.substring('Exception: '.length).trim();
+  }
+  return text.isEmpty ? fallback : text;
+}

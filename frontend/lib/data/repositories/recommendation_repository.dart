@@ -42,7 +42,7 @@ class RecommendationRepository {
       if (cached != null) return Right(cached);
       return Left(failureFromDio(e));
     } catch (e) {
-      return Left(UnknownFailure(e.toString()));
+      return Left(unexpectedFailure('load recommendations'));
     }
   }
 }
