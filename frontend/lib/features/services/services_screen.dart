@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/constants/service_categories.dart';
 import '../../core/errors/failures.dart';
+import '../../core/localization/l10n.dart';
 import '../../data/models/paginated_providers_model.dart';
 import '../../data/repositories/auth_repository.dart';
 import '../../shared/widgets/raha_card.dart';
@@ -57,6 +58,7 @@ class _ServicesScreenState extends ConsumerState<ServicesScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     final user = ref.watch(userProfileProvider).value;
     final filter = ServiceFilter(
       city: user?.city ?? 'Dubai',
@@ -92,7 +94,7 @@ class _ServicesScreenState extends ConsumerState<ServicesScreen> {
                                   fontWeight: FontWeight.w600,
                                 ),
                                 decoration: InputDecoration(
-                                  hintText: 'Search providers...',
+                                  hintText: l10n.searchProviders,
                                   hintStyle: TextStyle(
                                     color: Colors.white.withValues(alpha: 0.65),
                                     fontSize: 14,
@@ -108,11 +110,11 @@ class _ServicesScreenState extends ConsumerState<ServicesScreen> {
                                   () => _searchQuery = v.trim().toLowerCase(),
                                 ),
                               )
-                            : const Column(
+                            : Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    'TRUSTED HELP',
+                                    l10n.trustedHelpBanner,
                                     style: TextStyle(
                                       fontSize: 9,
                                       fontWeight: FontWeight.w800,
@@ -122,7 +124,7 @@ class _ServicesScreenState extends ConsumerState<ServicesScreen> {
                                   ),
                                   SizedBox(height: 4),
                                   Text(
-                                    'Home Services',
+                                    l10n.homeServices,
                                     style: TextStyle(
                                       fontSize: 22,
                                       fontWeight: FontWeight.w800,
@@ -146,7 +148,7 @@ class _ServicesScreenState extends ConsumerState<ServicesScreen> {
                   if (!_searchActive) ...[
                     const SizedBox(height: 8),
                     Text(
-                      'Book verified providers around ${user?.city ?? 'Dubai'}',
+                      l10n.bookVerifiedProvidersAround(user?.city ?? 'Dubai'),
                       style: TextStyle(
                         color: Colors.white.withValues(alpha: 0.65),
                         fontSize: 13,
@@ -239,7 +241,7 @@ class _ServicesScreenState extends ConsumerState<ServicesScreen> {
                             error: (e, _) => RahaErrorWidget(
                               message: e is Failure
                                   ? e.message
-                                  : 'Something went wrong',
+                                  : l10n.somethingWentWrong,
                               onRetry: () => ref.invalidate(provider),
                             ),
                             data: (data) {
@@ -260,11 +262,11 @@ class _ServicesScreenState extends ConsumerState<ServicesScreen> {
                               if (filtered.isEmpty) {
                                 return _searchQuery.isNotEmpty
                                     ? RahaEmptyWidget(
-                                        message: 'No results for "$_searchQuery"',
+                                        message: l10n.noResultsFor(_searchQuery),
                                       )
                                     : _CityExpandingEmptyState(
-                                        city: user?.city ?? 'your city',
-                                        type: 'home services',
+                                        city: user?.city ?? l10n.yourCity,
+                                        type: l10n.homeServicesType,
                                       );
                               }
 
@@ -421,8 +423,8 @@ class _ServicesScreenState extends ConsumerState<ServicesScreen> {
                                                   ),
                                                   child: Text(
                                                     p.isVerified
-                                                        ? 'Verified'
-                                                        : 'Available',
+                                                        ? l10n.verified
+                                                        : l10n.available,
                                                     style: TextStyle(
                                                       fontSize: 9,
                                                       fontWeight:
@@ -505,6 +507,7 @@ class _CityExpandingEmptyState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     return Center(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 32),
@@ -523,7 +526,7 @@ class _CityExpandingEmptyState extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             Text(
-              'Coming to $city soon',
+              l10n.comingToCitySoon(city),
               textAlign: TextAlign.center,
               style: const TextStyle(
                 fontSize: 16,
@@ -533,7 +536,7 @@ class _CityExpandingEmptyState extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              "We're expanding our $type to $city. Check back soon — we add new cities regularly!",
+              l10n.expandingTypeToCity(type, city),
               textAlign: TextAlign.center,
               style: const TextStyle(
                 fontSize: 13,

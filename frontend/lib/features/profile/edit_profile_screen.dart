@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import '../../core/localization/l10n.dart';
 import '../../core/theme/app_theme.dart';
 import '../../data/repositories/auth_repository.dart';
 
@@ -40,6 +41,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
   }
 
   Future<void> _saveProfile() async {
+    final l10n = context.l10n;
     if (!_formKey.currentState!.validate()) return;
     
     setState(() => _isLoading = true);
@@ -66,8 +68,8 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
         ref.invalidate(userProfileProvider);
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Profile updated successfully!'),
+            SnackBar(
+              content: Text(l10n.profileUpdatedSuccessfully),
               backgroundColor: AppColors.primary,
             ),
           );
@@ -79,13 +81,14 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
         backgroundColor: AppColors.primary,
         iconTheme: const IconThemeData(color: Colors.white),
-        title: const Text(
-          'Edit Profile',
+        title: Text(
+          l10n.editProfile,
           style: TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.w800,
@@ -102,36 +105,44 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _buildSectionTitle('Personal Information'),
+              _buildSectionTitle(l10n.personalInformation),
               const SizedBox(height: 16),
               _buildTextField(
                 controller: _nameController,
-                label: 'Full Name',
+                label: l10n.fullName,
                 icon: Icons.person_outline_rounded,
-                validator: (v) => v == null || v.trim().isEmpty ? 'Please enter your name' : null,
+                validator: (v) => v == null || v.trim().isEmpty
+                    ? l10n.pleaseEnterYourName
+                    : null,
               ),
               const SizedBox(height: 28),
-              _buildSectionTitle('Location & Background'),
+              _buildSectionTitle(l10n.locationAndBackground),
               const SizedBox(height: 16),
               _buildTextField(
                 controller: _cityController,
-                label: 'City (e.g. Dubai)',
+                label: l10n.cityExample,
                 icon: Icons.location_city_outlined,
-                validator: (v) => v == null || v.trim().isEmpty ? 'Please enter your city' : null,
+                validator: (v) => v == null || v.trim().isEmpty
+                    ? l10n.pleaseEnterYourCity
+                    : null,
               ),
               const SizedBox(height: 16),
               _buildTextField(
                 controller: _neighbourhoodController,
-                label: 'Neighbourhood (e.g. JLT)',
+                label: l10n.neighbourhoodExample,
                 icon: Icons.map_outlined,
-                validator: (v) => v == null || v.trim().isEmpty ? 'Please enter your neighbourhood' : null,
+                validator: (v) => v == null || v.trim().isEmpty
+                    ? l10n.pleaseEnterYourNeighbourhood
+                    : null,
               ),
               const SizedBox(height: 16),
               _buildTextField(
                 controller: _nationalityController,
-                label: 'Nationality',
+                label: l10n.nationality,
                 icon: Icons.flag_outlined,
-                validator: (v) => v == null || v.trim().isEmpty ? 'Please enter your nationality' : null,
+                validator: (v) => v == null || v.trim().isEmpty
+                    ? l10n.pleaseEnterYourNationality
+                    : null,
               ),
               const SizedBox(height: 48),
               SizedBox(
@@ -155,8 +166,8 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                             strokeWidth: 3,
                           ),
                         )
-                      : const Text(
-                          'Save Changes',
+                      : Text(
+                          l10n.saveChanges,
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w700,

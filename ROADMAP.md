@@ -6,6 +6,20 @@ This file tracks future product and engineering work for Raha.
 
 Raha should become the go-to mobile companion for expat professionals in the UAE by combining food discovery, trusted home services, and useful local guidance in one reliable app.
 
+## Completed
+
+- Firebase Auth with Google Sign-In and email/password
+- Onboarding flow for nationality, city, neighbourhood, and interests
+- Home recommendations powered by the backend Gemini AI
+- Food discovery with Google Places-backed live import flow
+- Home services listing, booking, and booking history
+- Offline read fallback for core user flows
+- App update checker backed by the backend `/health` endpoint
+- **Arabic localization and full RTL layout support** ✓
+- **Language preference persistence across app restarts** ✓
+- **Arabic AI recommendations — Gemini prompts dynamically switch language** ✓
+- Localized Arabic fallback recommendation cards ✓
+
 ## Now
 
 - Improve the home experience with richer live modules and better personalization
@@ -27,7 +41,7 @@ Raha should become the go-to mobile companion for expat professionals in the UAE
 ## Later
 
 - In-app AI concierge chat for food, services, and local lifestyle help
-- Arabic localization and multilingual support
+- Additional language support beyond English and Arabic
 - Ratings and reviews for providers and food spots
 - Referral and loyalty programs
 - Personalized weekly digest of recommendations and local tips
@@ -35,6 +49,7 @@ Raha should become the go-to mobile companion for expat professionals in the UAE
 
 ## AI Roadmap
 
+- ~~Arabic AI recommendations (Phase 2)~~ ✓ Done in v1.1.0
 - Improve recommendation prompts using richer user profile context
 - Add behavior-based personalization from bookings, searches, and views
 - Explain recommendations in clearer end-user language

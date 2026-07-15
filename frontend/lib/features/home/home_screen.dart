@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
 import '../../core/constants/cuisine_types.dart';
+import '../../core/localization/l10n.dart';
 import '../../core/constants/service_categories.dart';
 import '../../core/errors/failures.dart';
 import '../../core/theme/app_theme.dart';
@@ -44,7 +45,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final profile = ref.watch(userProfileProvider).value;
-    final name = profile?.name.isNotEmpty == true ? profile!.name : 'there';
+    final l10n = context.l10n;
+    final name = profile?.name.isNotEmpty == true ? profile!.name : l10n.friend;
     final recommendationState = ref.watch(recommendationProvider);
     final bookingState = ref.watch(bookingNotifierProvider);
 
@@ -75,7 +77,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        'Hi, $name',
+                        l10n.hiName(name),
                         style: const TextStyle(
                           fontSize: 22,
                           fontWeight: FontWeight.w800,
@@ -137,36 +139,54 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     children: [
                       _buildHero(profile, items),
                       const SizedBox(height: 18),
-                      _sectionTitle('Quick actions', 'Jump straight into what you need'),
+                      _sectionTitle(
+                        l10n.quickActions,
+                        l10n.quickActionsSubtitle,
+                      ),
                       const SizedBox(height: 12),
                       _buildQuickActions(context),
                       const SizedBox(height: 20),
                       _sectionTitle(
-                        'Made for your base',
+                        l10n.madeForYourBase,
                         profile?.city.isNotEmpty == true
-                            ? 'Useful picks around ${profile!.city}'
-                            : 'Useful picks for your daily routine',
+                            ? l10n.usefulPicksAround(profile!.city)
+                            : l10n.usefulPicksRoutine,
                       ),
                       const SizedBox(height: 12),
                       _buildContextCard(profile),
                       const SizedBox(height: 20),
-                      _sectionTitle('Taste of home', 'Start with cuisines likely to feel familiar'),
+                      _sectionTitle(
+                        l10n.tasteOfHome,
+                        l10n.tasteOfHomeSubtitle,
+                      ),
                       const SizedBox(height: 12),
                       _buildCuisineRail(context, profile),
                       const SizedBox(height: 20),
-                      _sectionTitle('Book a service fast', 'Popular categories for busy UAE city life'),
+                      _sectionTitle(
+                        l10n.bookServiceFast,
+                        l10n.bookServiceFastSubtitle,
+                      ),
                       const SizedBox(height: 12),
                       _buildServiceRail(context),
                       const SizedBox(height: 20),
-                      _sectionTitle('Recent booking', 'Keep track of your latest request'),
+                      _sectionTitle(
+                        l10n.recentBooking,
+                        l10n.recentBookingSubtitle,
+                      ),
                       const SizedBox(height: 12),
                       _buildRecentBooking(context, bookingState),
                       const SizedBox(height: 20),
-                      _sectionTitle('AI Picks for You', 'Live recommendations based on your profile'),
+                      _sectionTitle(
+                        l10n.aiPicksForYou,
+                        l10n.aiPicksSubtitle,
+                      ),
                       const SizedBox(height: 12),
                       _buildRecommendationRail(context, items),
                       const SizedBox(height: 20),
-                      _sectionTitle('Recommended now', 'A fuller set of ideas for food, services, and local tips'),
+                      _sectionTitle(
+                        l10n.recommendedNow,
+                        l10n.recommendedNowSubtitle,
+                      ),
                       const SizedBox(height: 12),
                       ...items.map((item) => Padding(
                             padding: const EdgeInsets.only(bottom: 12),
@@ -185,6 +205,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   Widget _buildHero(UserModel? profile, List<AIRecommendationModel> items) {
     final hero = items.isNotEmpty ? items.first : null;
+    final l10n = context.l10n;
     final location = profile?.city.isNotEmpty == true ? profile!.city : 'UAE';
     final neighbourhood = profile?.neighbourhood.isNotEmpty == true
         ? profile!.neighbourhood
@@ -223,8 +244,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   borderRadius: BorderRadius.circular(20),
                   border: Border.all(color: goldColor.withValues(alpha: 0.4)),
                 ),
-                child: const Text(
-                  'RAHA TODAY',
+                child: Text(
+                  l10n.rahaToday,
                   style: TextStyle(
                     fontSize: 10,
                     fontWeight: FontWeight.w800,
@@ -243,7 +264,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           ),
           const SizedBox(height: 16),
           Text(
-            hero?.title ?? 'Discover what feels familiar',
+            hero?.title ?? l10n.heroDefaultTitle,
             style: const TextStyle(
               fontSize: 24,
               height: 1.05,
@@ -254,7 +275,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           const SizedBox(height: 8),
           Text(
             hero?.subtitle ??
-                'Food, services, and local help curated around $neighbourhood.',
+                l10n.heroDefaultSubtitle(neighbourhood),
             style: TextStyle(
               fontSize: 13,
               height: 1.45,
@@ -312,8 +333,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         Expanded(
           child: _quickActionTile(
             icon: Icons.restaurant_menu_rounded,
-            title: 'Find food',
-            subtitle: 'Home flavours',
+            title: context.l10n.findFood,
+            subtitle: context.l10n.homeFlavours,
             accent: const Color(0xFFE4F4EF),
             iconColor: primaryColor,
             onTap: () => context.go('/food'),
@@ -323,8 +344,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         Expanded(
           child: _quickActionTile(
             icon: Icons.home_repair_service_rounded,
-            title: 'Book help',
-            subtitle: 'Cleaning & more',
+            title: context.l10n.bookHelp,
+            subtitle: context.l10n.cleaningAndMore,
             accent: const Color(0xFFFFF3DF),
             iconColor: const Color(0xFF946200),
             onTap: () => context.go('/services'),
@@ -401,6 +422,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         : 'your neighbourhood';
     final interests = profile?.interestTags.where((tag) => tag.isNotEmpty).toList() ?? const <String>[];
 
+    final l10n = context.l10n;
     return Container(
       padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
@@ -432,7 +454,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      '$location rhythm',
+                      l10n.cityRhythm(location),
                       style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w800,
@@ -441,7 +463,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     ),
                     const SizedBox(height: 2),
                     Text(
-                      'Built around $neighbourhood and your preferences.',
+                      l10n.builtAround(neighbourhood),
                       style: const TextStyle(
                         fontSize: 12,
                         color: mutedColor,
@@ -461,7 +483,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               if (profile?.nationality.isNotEmpty == true)
                 _infoChip(Icons.flag_circle_rounded, profile!.nationality),
               if (interests.isEmpty)
-                _infoChip(Icons.favorite_rounded, 'General lifestyle')
+                _infoChip(Icons.favorite_rounded, l10n.generalLifestyle)
               else
                 ...interests.take(3).map((tag) => _infoChip(Icons.local_fire_department_rounded, tag)),
             ],
@@ -533,8 +555,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     ),
                   ),
                   const SizedBox(height: 2),
-                  const Text(
-                    'Open food feed',
+                  Text(
+                    context.l10n.openFoodFeed,
                     style: TextStyle(
                       fontSize: 11,
                       color: mutedColor,
@@ -594,8 +616,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     ),
                   ),
                   const SizedBox(height: 2),
-                  const Text(
-                    'Browse providers',
+                  Text(
+                    context.l10n.browseProviders,
                     style: TextStyle(fontSize: 11, color: mutedColor),
                   ),
                 ],
@@ -619,8 +641,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           borderRadius: BorderRadius.circular(18),
           border: Border.all(color: borderColor),
         ),
-        child: const Text(
-          'Loading your latest booking...',
+        child: Text(
+          context.l10n.loadingLatestBooking,
           style: TextStyle(
             fontSize: 13,
             color: mutedColor,
@@ -634,8 +656,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           borderRadius: BorderRadius.circular(18),
           border: Border.all(color: borderColor),
         ),
-        child: const Text(
-          'Your booking history will appear here once it is available.',
+        child: Text(
+          context.l10n.bookingHistoryAppear,
           style: TextStyle(
             fontSize: 13,
             color: mutedColor,
@@ -669,12 +691,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     ),
                   ),
                   const SizedBox(width: 12),
-                  const Expanded(
+                  Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'No bookings yet',
+                          context.l10n.noBookingsYet,
                           style: TextStyle(
                             fontSize: 15,
                             fontWeight: FontWeight.w800,
@@ -683,7 +705,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                         ),
                         SizedBox(height: 3),
                         Text(
-                          'Book a cleaner, mover, or handyman to get started.',
+                          context.l10n.noBookingsYetSubtitle,
                           style: TextStyle(fontSize: 12, color: mutedColor),
                         ),
                       ],
@@ -728,7 +750,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       Text(
                         booking.providerName.isNotEmpty
                             ? booking.providerName
-                            : 'Service booking',
+                            : context.l10n.serviceBooking,
                         style: const TextStyle(
                           fontSize: 15,
                           fontWeight: FontWeight.w800,
@@ -765,8 +787,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           color: cardColor,
           borderRadius: BorderRadius.circular(16),
         ),
-        child: const Text(
-          'More personalised recommendations will appear here as you use Raha.',
+        child: Text(
+          context.l10n.moreRecommendations,
           style: TextStyle(
             fontSize: 13,
             fontWeight: FontWeight.w500,
@@ -1023,8 +1045,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   String _greetingForNow() {
     final hour = DateTime.now().hour;
-    if (hour < 12) return 'Good morning';
-    if (hour < 18) return 'Good afternoon';
-    return 'Good evening';
+    if (hour < 12) return context.l10n.goodMorning;
+    if (hour < 18) return context.l10n.goodAfternoon;
+    return context.l10n.goodEvening;
   }
 }

@@ -2,6 +2,15 @@
 
 All notable changes to Raha should be documented in this file.
 
+## v1.1.0
+
+- Added full Arabic translation and Right-to-Left (RTL) layout support across all app screens
+- Implemented robust language preference persistence using SharedPreferences to prevent resets on app restarts
+- Integrated dynamic Arabic translation support in backend Gemini AI recommendation prompts
+- Added Arabic localized fallback recommendation cards for offline/failed AI requests
+- Updated default production API endpoint to point directly to live Render server
+- Cleaned up redundant configurations and dead env code
+
 ## v1.0.2
 
 - Fixed Google Places photo proxy responses so food detail images load as real image bytes instead of invalid JSON payloads

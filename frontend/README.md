@@ -14,6 +14,9 @@ Flutter mobile app for Raha. It helps expats discover home-style food, book serv
 - Edit profile screen for name, city, neighbourhood, and nationality
 - App update checker backed by the backend `/health` endpoint
 - Branded splash screen and launcher icons
+- Offline support with cached read fallback in Flutter repositories
+- Arabic and English support with locale switching
+- RTL support for Arabic
 
 ## Stack
 

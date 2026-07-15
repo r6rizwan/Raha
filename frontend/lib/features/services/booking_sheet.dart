@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import '../../core/errors/failures.dart';
+import '../../core/localization/l10n.dart';
 import '../../data/models/service_provider_model.dart';
 import '../profile/bookings_notifier.dart';
 import '../../core/theme/app_theme.dart';
@@ -37,6 +38,7 @@ class _BookingSheetState extends ConsumerState<BookingSheet> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     return Container(
       decoration: const BoxDecoration(
         color: backgroundColor,
@@ -77,8 +79,8 @@ class _BookingSheetState extends ConsumerState<BookingSheet> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
-                      'SCHEDULE SERVICE',
+                    Text(
+                      l10n.scheduleService,
                       style: TextStyle(
                         fontSize: 9,
                         fontWeight: FontWeight.w800,
@@ -194,7 +196,7 @@ class _BookingSheetState extends ConsumerState<BookingSheet> {
                       const SizedBox(width: 12),
                       Text(
                         scheduledAt == null
-                            ? 'Select date and time'
+                            ? l10n.selectDateAndTime
                             : DateFormat(
                                 'EEE, d MMM · h:mm a',
                               ).format(scheduledAt!),
@@ -230,7 +232,7 @@ class _BookingSheetState extends ConsumerState<BookingSheet> {
               fontWeight: FontWeight.w500,
             ),
             decoration: InputDecoration(
-              hintText: 'Any special instructions or details?',
+              hintText: l10n.bookingInstructionsHint,
               hintStyle: const TextStyle(color: mutedColor, fontSize: 13),
               filled: true,
               fillColor: cardColor,
@@ -261,7 +263,7 @@ class _BookingSheetState extends ConsumerState<BookingSheet> {
               ),
               const SizedBox(width: 4),
               Text(
-                'Final rates may differ slightly depending on scope of service.',
+                l10n.finalRatesMayDiffer,
                 style: TextStyle(
                   fontSize: 10,
                   color: mutedColor.withValues(alpha: 0.95),
@@ -290,8 +292,8 @@ class _BookingSheetState extends ConsumerState<BookingSheet> {
                   : () async {
                       if (scheduledAt == null) {
                         ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('Please select an appointment time'),
+                          SnackBar(
+                            content: Text(l10n.selectAppointmentTime),
                             backgroundColor: textColor,
                           ),
                         );
@@ -310,10 +312,8 @@ class _BookingSheetState extends ConsumerState<BookingSheet> {
                         if (context.mounted) {
                           Navigator.pop(context);
                           ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text(
-                                'Booking requested! Provider will confirm shortly.',
-                              ),
+                            SnackBar(
+                              content: Text(l10n.bookingRequestedSuccess),
                               backgroundColor: primaryColor,
                             ),
                           );
@@ -340,8 +340,8 @@ class _BookingSheetState extends ConsumerState<BookingSheet> {
                         strokeWidth: 2.5,
                       ),
                     )
-                  : const Text(
-                      'Confirm Booking',
+                  : Text(
+                      l10n.confirmBooking,
                       style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w700,
@@ -362,8 +362,8 @@ class _BookingSheetState extends ConsumerState<BookingSheet> {
                 ),
               ),
               onPressed: () => Navigator.pop(context),
-              child: const Text(
-                'Cancel',
+              child: Text(
+                l10n.cancel,
                 style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
               ),
             ),

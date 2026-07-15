@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import '../localization/l10n.dart';
 import '../../core/theme/app_theme.dart';
 import '../../data/repositories/auth_repository.dart';
 import '../../data/repositories/providers.dart';
@@ -147,13 +148,6 @@ class _Shell extends StatelessWidget {
   const _Shell({required this.navigationShell});
   final StatefulNavigationShell navigationShell;
 
-  static const _tabs = [
-    (icon: Icons.home_rounded,        label: 'Home'),
-    (icon: Icons.restaurant_rounded,  label: 'Food'),
-    (icon: Icons.handyman_rounded,    label: 'Services'),
-    (icon: Icons.person_rounded,      label: 'Profile'),
-  ];
-
   static const _activeColor   = Color(0xFF1B5E4B);
   static const _inactiveColor = Color(0xFF4A4A4A);
   static const _pillColor     = Color(0x1F1B5E4B); // 12% opacity
@@ -161,6 +155,12 @@ class _Shell extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final selectedIndex = navigationShell.currentIndex;
+    final tabs = [
+      (icon: Icons.home_rounded, label: context.l10n.homeTab),
+      (icon: Icons.restaurant_rounded, label: context.l10n.foodTab),
+      (icon: Icons.handyman_rounded, label: context.l10n.servicesTab),
+      (icon: Icons.person_rounded, label: context.l10n.profileTab),
+    ];
 
     return Scaffold(
       body: navigationShell,
@@ -180,8 +180,8 @@ class _Shell extends StatelessWidget {
             ],
           ),
           child: Row(
-            children: List.generate(_tabs.length, (i) {
-              final tab = _tabs[i];
+            children: List.generate(tabs.length, (i) {
+              final tab = tabs[i];
               final isActive = i == selectedIndex;
               return Expanded(
                 child: GestureDetector(

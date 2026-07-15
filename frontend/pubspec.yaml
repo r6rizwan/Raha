@@ -2,13 +2,15 @@ name: raha
 description: "Raha is a mobile app for expats and immigrants — built with Flutter + Node.js. Discover food from your home cuisine, book trusted home services, and get AI-personalised recommendations tailored to whatever city you live in and your nationality."
 publish_to: 'none'
 
-version: 1.0.2+3
+version: 1.1.0+4
 
 environment:
   sdk: ^3.11.0
 
 dependencies:
   flutter:
+    sdk: flutter
+  flutter_localizations:
     sdk: flutter
 
   cupertino_icons: ^1.0.8
@@ -20,6 +22,7 @@ dependencies:
   firebase_auth: ^6.5.1
   google_sign_in: ^7.2.0
   flutter_secure_storage: ^10.3.0
+  shared_preferences: ^2.3.5
   cached_network_image: ^3.4.1
   shimmer: ^3.0.0
   fpdart: ^1.2.0
@@ -52,6 +55,7 @@ flutter_native_splash:
 
 
 flutter:
+  generate: true
   uses-material-design: true
   assets:
     - assets/logo.png

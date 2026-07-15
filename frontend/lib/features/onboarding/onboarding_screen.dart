@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import '../../core/localization/l10n.dart';
 import '../../core/constants/nationalities.dart';
 import '../../core/errors/failures.dart';
 import '../../core/router/app_router.dart';
@@ -38,6 +39,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     ref.listen<AsyncValue<void>>(onboardingNotifierProvider, (previous, next) {
       if (!context.mounted) return;
 
@@ -87,7 +89,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        'رَحة  ·  Setup Your Account',
+                        'رَحة  ·  ${l10n.setupYourAccount}',
                         style: TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.w500,
@@ -123,7 +125,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         // Nationality Field
-                        _buildFieldLabel('NATIONALITY'),
+                        _buildFieldLabel(l10n.nationality.toUpperCase()),
                         DropdownButtonFormField<String>(
                           initialValue: nationality,
                           style: const TextStyle(
@@ -147,7 +149,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                         const SizedBox(height: 18),
 
                         // City Field
-                        _buildFieldLabel('CITY'),
+                        _buildFieldLabel(l10n.city.toUpperCase()),
                         TextField(
                           controller: city,
                           textCapitalization: TextCapitalization.words,
@@ -161,7 +163,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                         const SizedBox(height: 18),
 
                         // Neighbourhood Field
-                        _buildFieldLabel('NEIGHBOURHOOD'),
+                        _buildFieldLabel(l10n.neighbourhood.toUpperCase()),
                         TextField(
                           controller: neighbourhood,
                           textCapitalization: TextCapitalization.words,
@@ -171,13 +173,13 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                             fontWeight: FontWeight.w500,
                           ),
                           decoration: _buildInputDecoration(
-                            hint: 'e.g. Dubai Marina, JLT',
+                            hint: l10n.neighbourhoodHint,
                           ),
                         ),
                         const SizedBox(height: 18),
 
                         // Interests/Tags Field
-                        _buildFieldLabel('INTERESTS'),
+                        _buildFieldLabel(l10n.interests.toUpperCase()),
                         TextField(
                           controller: tags,
                           textCapitalization: TextCapitalization.words,
@@ -187,8 +189,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                             fontWeight: FontWeight.w500,
                           ),
                           decoration: _buildInputDecoration(
-                            hint:
-                                'e.g. Food, Cleaning, Exploring (Comma-separated)',
+                            hint: l10n.interestsHint,
                           ),
                         ),
                         const Spacer(),
@@ -237,8 +238,8 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                                       strokeWidth: 2.5,
                                     ),
                                   )
-                                : const Text(
-                                    'Continue',
+                                : Text(
+                                    l10n.continueLabel,
                                     style: TextStyle(
                                       fontSize: 14,
                                       fontWeight: FontWeight.w700,

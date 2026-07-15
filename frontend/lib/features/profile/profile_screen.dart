@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
+import '../../core/localization/l10n.dart';
+import '../../core/localization/locale_provider.dart';
 import '../../data/repositories/auth_repository.dart';
 import '../../data/services/auth_service.dart';
 import '../../shared/widgets/raha_card.dart';
@@ -33,6 +35,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     final user = ref.watch(userProfileProvider).value;
     final bookingsAsync = ref.watch(bookingNotifierProvider);
 
@@ -53,8 +56,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text(
-                          'YOUR RAHA',
+                        Text(
+                          l10n.yourRaha,
                           style: TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.w800,
@@ -85,7 +88,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    user?.name ?? 'Raha User',
+                                    user?.name ?? l10n.rahaUser,
                                     style: const TextStyle(
                                       fontSize: 18,
                                       fontWeight: FontWeight.w800,
@@ -104,7 +107,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                                       const SizedBox(width: 6),
                                       Expanded(
                                         child: Text(
-                                          user?.email ?? 'No email associated',
+                                          user?.email ?? l10n.noEmailAssociated,
                                           style: const TextStyle(
                                             fontSize: 13,
                                             color: mutedColor,
@@ -118,7 +121,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                                   ),
                                   const SizedBox(height: 5),
                                   Text(
-                                    '${user?.nationality ?? 'Expat'} · ${user?.city ?? 'Dubai'}',
+                                    '${user?.nationality ?? l10n.expat} · ${user?.city ?? 'Dubai'}',
                                     style: TextStyle(
                                       color: whiteTextColor.withValues(
                                         alpha: 0.65,
@@ -173,8 +176,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                             ),
                             child: Row(
                               children: [
-                                _buildTabButton(0, 'My Bookings'),
-                                _buildTabButton(1, 'Settings'),
+                                _buildTabButton(0, l10n.myBookings),
+                                _buildTabButton(1, l10n.settings),
                               ],
                             ),
                           ),
@@ -240,56 +243,63 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   }
 
   Widget _buildSettingsTab() {
+    final l10n = context.l10n;
     return ListView(
       padding: const EdgeInsets.all(20),
       physics: const BouncingScrollPhysics(),
       children: [
-        _buildSettingsGroup('Account', [
+        _buildSettingsGroup(l10n.account, [
           _buildSettingsTile(
             icon: Icons.person_outline_rounded,
-            title: 'Edit Profile Details',
-            subtitle: 'Update your name, city, and nationality',
+            title: l10n.editProfileDetails,
+            subtitle: l10n.updateNameCityNationality,
             onTap: () {
               context.push('/edit-profile');
             },
           ),
           _buildSettingsTile(
+            icon: Icons.language_rounded,
+            title: l10n.language,
+            subtitle: _languageLabel(),
+            onTap: _showLanguageSheet,
+          ),
+          _buildSettingsTile(
             icon: Icons.payment_rounded,
-            title: 'Payment Methods',
-            subtitle: 'Manage your saved cards',
+            title: l10n.paymentMethods,
+            subtitle: l10n.manageSavedCards,
             onTap: () {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Payment Methods coming soon!')),
-              );
+              ScaffoldMessenger.of(
+                context,
+              ).showSnackBar(SnackBar(content: Text(l10n.paymentMethodsSoon)));
             },
           ),
           _buildSettingsTile(
             icon: Icons.bookmark_border_rounded,
-            title: 'Saved Locations',
-            subtitle: 'Your favorite food spots',
+            title: l10n.savedLocations,
+            subtitle: l10n.favoriteFoodSpots,
             onTap: () {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Saved Locations coming soon!')),
-              );
+              ScaffoldMessenger.of(
+                context,
+              ).showSnackBar(SnackBar(content: Text(l10n.savedLocationsSoon)));
             },
           ),
         ]),
         const SizedBox(height: 24),
-        _buildSettingsGroup('More', [
+        _buildSettingsGroup(l10n.more, [
           _buildSettingsTile(
             icon: Icons.help_outline_rounded,
-            title: 'Help & Support',
-            subtitle: 'Get assistance with your account',
+            title: l10n.helpSupport,
+            subtitle: l10n.getAccountAssistance,
             onTap: () {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Help & Support coming soon!')),
-              );
+              ScaffoldMessenger.of(
+                context,
+              ).showSnackBar(SnackBar(content: Text(l10n.helpSupportSoon)));
             },
           ),
           _buildSettingsTile(
             icon: Icons.logout_rounded,
-            title: 'Log Out',
-            subtitle: 'Sign out of your account securely',
+            title: l10n.logOut,
+            subtitle: l10n.signOutSecurely,
             isDestructive: true,
             onTap: () => ref.read(authServiceProvider).signOut(),
           ),
@@ -411,6 +421,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   }
 
   Widget _buildBookingsTab(AsyncValue<dynamic> bookingsAsync) {
+    final l10n = context.l10n;
     return bookingsAsync.when(
       loading: () => const RahaLoadingWidget(),
       error: (e, _) => Center(
@@ -423,13 +434,13 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
               size: 48,
             ),
             const SizedBox(height: 16),
-            const Text(
-              'Failed to load bookings',
+            Text(
+              l10n.failedToLoadBookings,
               style: TextStyle(color: mutedColor),
             ),
             TextButton(
               onPressed: () => ref.invalidate(bookingNotifierProvider),
-              child: const Text('Retry'),
+              child: Text(l10n.retry),
             ),
           ],
         ),
@@ -456,8 +467,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                     ),
                   ),
                   const SizedBox(height: 24),
-                  const Text(
-                    'No Bookings Yet',
+                  Text(
+                    l10n.noBookingsTitle,
                     style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.w800,
@@ -466,8 +477,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                     ),
                   ),
                   const SizedBox(height: 8),
-                  const Text(
-                    'You haven\'t made any service appointments or reservations recently.',
+                  Text(
+                    l10n.noBookingsDescription,
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 14,
@@ -522,7 +533,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                                 Text(
                                   b.providerName.isNotEmpty
                                       ? b.providerName
-                                      : 'Unknown Provider',
+                                      : context.l10n.unknownProvider,
                                   style: const TextStyle(
                                     fontSize: 15,
                                     fontWeight: FontWeight.w700,
@@ -580,16 +591,16 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                                   borderRadius: BorderRadius.circular(20),
                                 ),
                                 backgroundColor: cardColor,
-                                title: const Text(
-                                  'Cancel Booking?',
+                                title: Text(
+                                  context.l10n.cancelBookingTitle,
                                   style: TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.w800,
                                     color: textColor,
                                   ),
                                 ),
-                                content: const Text(
-                                  'Are you sure you want to cancel this appointment?',
+                                content: Text(
+                                  context.l10n.cancelBookingMessage,
                                   style: TextStyle(
                                     fontSize: 13,
                                     color: mutedColor,
@@ -599,8 +610,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                                 actions: [
                                   TextButton(
                                     onPressed: () => Navigator.pop(ctx, false),
-                                    child: const Text(
-                                      'Keep it',
+                                    child: Text(
+                                      context.l10n.keepIt,
                                       style: TextStyle(
                                         color: mutedColor,
                                         fontWeight: FontWeight.w600,
@@ -609,8 +620,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                                   ),
                                   TextButton(
                                     onPressed: () => Navigator.pop(ctx, true),
-                                    child: const Text(
-                                      'Yes, cancel',
+                                    child: Text(
+                                      context.l10n.yesCancel,
                                       style: TextStyle(
                                         color: Colors.redAccent,
                                         fontWeight: FontWeight.w700,
@@ -629,7 +640,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                           child: Container(
                             padding: const EdgeInsets.symmetric(vertical: 8),
                             alignment: Alignment.center,
-                            child: const Row(
+                            child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Icon(
@@ -639,7 +650,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                                 ),
                                 SizedBox(width: 6),
                                 Text(
-                                  'Cancel booking',
+                                  context.l10n.cancelBooking,
                                   style: TextStyle(
                                     fontSize: 13,
                                     fontWeight: FontWeight.w700,
@@ -675,5 +686,48 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
       default:
         return {'bg': const Color(0xFFF0F4F8), 'text': textColor};
     }
+  }
+
+  String _languageLabel() {
+    final locale = ref.watch(localeProvider);
+    final l10n = context.l10n;
+    if (locale == null) return l10n.systemDefault;
+    if (locale.languageCode == 'ar') return l10n.arabic;
+    return l10n.english;
+  }
+
+  Future<void> _showLanguageSheet() async {
+    final l10n = context.l10n;
+    await showModalBottomSheet<void>(
+      context: context,
+      builder: (context) => SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              title: Text(l10n.systemDefault),
+              onTap: () async {
+                await ref.read(localeProvider.notifier).useSystem();
+                if (context.mounted) Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              title: Text(l10n.english),
+              onTap: () async {
+                await ref.read(localeProvider.notifier).setEnglish();
+                if (context.mounted) Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              title: Text(l10n.arabic),
+              onTap: () async {
+                await ref.read(localeProvider.notifier).setArabic();
+                if (context.mounted) Navigator.pop(context);
+              },
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../core/localization/l10n.dart';
 import '../../core/theme/app_theme.dart';
 import '../../data/services/auth_service.dart';
 
@@ -82,6 +83,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     final state = ref.watch(loginNotifierProvider);
     final notifier = ref.read(loginNotifierProvider.notifier);
     final signUp = state.mode == LoginMode.signUp;
+    final l10n = context.l10n;
 
     return Scaffold(
       backgroundColor: AppColors.primary,
@@ -135,7 +137,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
                           Text(
-                            signUp ? 'Create your account' : 'Welcome back',
+                            signUp
+                                ? l10n.loginCreateAccount
+                                : l10n.loginWelcomeBack,
                             style: const TextStyle(
                               color: AppColors.text,
                               fontSize: 20,
@@ -143,9 +147,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                             ),
                           ),
                           const SizedBox(height: 6),
-                          const Text(
-                            'Discover food, services, and local tips for expat life in the UAE.',
-                            style: TextStyle(
+                          Text(
+                            l10n.loginDescription,
+                            style: const TextStyle(
                               color: AppColors.muted,
                               fontSize: 13,
                               height: 1.35,
@@ -166,9 +170,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                 ? null
                                 : notifier.signInWithGoogle,
                             icon: const Icon(Icons.g_mobiledata, size: 28),
-                            label: const Text('Continue with Google'),
+                            label: Text(l10n.continueWithGoogle),
                           ),
-                          const Padding(
+                          Padding(
                             padding: EdgeInsets.symmetric(vertical: 18),
                             child: Row(
                               children: [
@@ -178,8 +182,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                 Padding(
                                   padding: EdgeInsets.symmetric(horizontal: 12),
                                   child: Text(
-                                    'or',
-                                    style: TextStyle(color: AppColors.muted),
+                                    l10n.or,
+                                    style: const TextStyle(
+                                      color: AppColors.muted,
+                                    ),
                                   ),
                                 ),
                                 Expanded(
@@ -192,16 +198,16 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                             TextField(
                               controller: name,
                               textCapitalization: TextCapitalization.words,
-                              decoration: const InputDecoration(
-                                labelText: 'Name',
+                              decoration: InputDecoration(
+                                labelText: l10n.name,
                               ),
                             ),
                             const SizedBox(height: 12),
                           ],
                           TextField(
                             controller: email,
-                            decoration: const InputDecoration(
-                              labelText: 'Email',
+                            decoration: InputDecoration(
+                              labelText: l10n.email,
                             ),
                           ),
                           const SizedBox(height: 12),
@@ -209,13 +215,16 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                             controller: password,
                             obscureText: !_showPassword,
                             decoration: InputDecoration(
-                              labelText: 'Password',
+                              labelText: l10n.password,
                               suffixIcon: IconButton(
                                 onPressed: () {
                                   setState(() {
                                     _showPassword = !_showPassword;
                                   });
                                 },
+                                tooltip: _showPassword
+                                    ? l10n.hidePassword
+                                    : l10n.showPassword,
                                 icon: Icon(
                                   _showPassword
                                       ? Icons.visibility_off_rounded
@@ -238,14 +247,14 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                           email.text,
                                           password.text,
                                         ),
-                            child: Text(signUp ? 'Sign Up' : 'Sign In'),
+                            child: Text(signUp ? l10n.signUp : l10n.signIn),
                           ),
                           TextButton(
                             onPressed: state.isLoading ? null : notifier.toggle,
                             child: Text(
                               signUp
-                                  ? 'Already have an account? Sign In'
-                                  : "Don't have an account? Sign Up",
+                                  ? l10n.alreadyHaveAccount
+                                  : l10n.dontHaveAccount,
                             ),
                           ),
                           if (state.errorMessage != null)

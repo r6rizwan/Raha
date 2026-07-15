@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../core/errors/failures.dart';
+import '../../core/localization/l10n.dart';
 import '../../core/theme/app_theme.dart';
 import '../../data/models/food_place_details_model.dart';
 import '../../data/models/food_spot_details_model.dart';
@@ -36,6 +37,7 @@ class FoodDetailScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
     final provider = foodDetailProvider(spotId);
 
     return Scaffold(
@@ -45,7 +47,9 @@ class FoodDetailScreen extends ConsumerWidget {
           .when(
             loading: () => const RahaLoadingWidget(),
             error: (e, _) => RahaErrorWidget(
-              message: e is Failure ? e.message : 'Something went wrong',
+              message: e is Failure
+                  ? e.message
+                  : context.l10n.somethingWentWrong,
               onRetry: () => ref.invalidate(provider),
             ),
             data: (details) {
@@ -180,14 +184,14 @@ class FoodDetailScreen extends ConsumerWidget {
                                 _InfoChip(
                                   icon: Icons.star_rounded,
                                   label:
-                                      '${displayRating.toStringAsFixed(1)} rating',
+                                      '${displayRating.toStringAsFixed(1)} ${l10n.ratingSuffix}',
                                   color: Colors.white,
                                   bgColor: primaryColor,
                                 ),
                                 _InfoChip(
                                   icon: Icons.restaurant_menu_rounded,
                                   label: spot.cuisineTypes.isEmpty
-                                      ? 'Cuisine'
+                                      ? l10n.cuisine
                                       : spot.cuisineTypes.take(2).join(' • '),
                                   color: primaryColor,
                                   bgColor: mintBgColor,
@@ -202,7 +206,7 @@ class FoodDetailScreen extends ConsumerWidget {
                                 if (place != null && place.userRatingCount > 0)
                                   _InfoChip(
                                     icon: Icons.rate_review_outlined,
-                                    label: '${place.userRatingCount} reviews',
+                                    label: l10n.reviewsCount(place.userRatingCount),
                                     color: AppColors.violet,
                                     bgColor: AppColors.violetBg,
                                   ),
@@ -211,12 +215,12 @@ class FoodDetailScreen extends ConsumerWidget {
                             const SizedBox(height: 22),
                             _ActionGrid(place: place),
                             const SizedBox(height: 26),
-                            _SectionTitle('Details'),
+                            _SectionTitle(l10n.details),
                             const SizedBox(height: 12),
                             _DetailsCard(spotCity: spot.city, place: place),
                             if (place?.openingHours.isNotEmpty == true) ...[
                               const SizedBox(height: 26),
-                              _SectionTitle('Opening Hours'),
+                              _SectionTitle(l10n.openingHours),
                               const SizedBox(height: 12),
                               _ExpandableHoursCard(openingHours: place!.openingHours),
                             ],
@@ -272,7 +276,7 @@ class _LiveBadge extends StatelessWidget {
       borderRadius: BorderRadius.circular(20),
     ),
     child: Text(
-      isLive ? 'Live Places' : 'Local data',
+      isLive ? context.l10n.livePlaces : context.l10n.localData,
       style: TextStyle(
         color: isLive
             ? FoodDetailScreen.primaryColor
@@ -331,7 +335,7 @@ class _ActionGrid extends StatelessWidget {
       if (place?.mapsUrl.isNotEmpty == true)
         _ActionSpec(
           icon: Icons.directions_rounded,
-          label: 'Directions',
+          label: context.l10n.directions,
           onTap: () => launchUrl(
             Uri.parse(place!.mapsUrl),
             mode: LaunchMode.externalApplication,
@@ -340,7 +344,7 @@ class _ActionGrid extends StatelessWidget {
       if (place?.phone.isNotEmpty == true)
         _ActionSpec(
           icon: Icons.phone_rounded,
-          label: 'Call',
+          label: context.l10n.call,
           onTap: () => launchUrl(Uri.parse('tel:${place!.phone}')),
         ),
     ];
@@ -440,7 +444,7 @@ class _DetailsCard extends StatelessWidget {
       children: [
         _DetailRow(
           icon: Icons.place_outlined,
-          title: 'Location',
+          title: context.l10n.location,
           value: place?.address.isNotEmpty == true ? place!.address : spotCity,
           onTap: place?.mapsUrl.isNotEmpty == true
               ? () => launchUrl(
@@ -452,7 +456,7 @@ class _DetailsCard extends StatelessWidget {
         if (place?.phone.isNotEmpty == true)
           _DetailRow(
             icon: Icons.phone_outlined,
-            title: 'Phone',
+            title: context.l10n.phone,
             value: place!.phone,
             onTap: () => launchUrl(Uri.parse('tel:${place!.phone}')),
           ),
@@ -543,7 +547,9 @@ class _ExpandableHoursCardState extends State<_ExpandableHoursCard> {
   bool _isExpanded = false;
 
   String _getTodayTiming() {
-    if (widget.openingHours.isEmpty) return 'Opening hours unavailable';
+    if (widget.openingHours.isEmpty) {
+      return context.l10n.openingHoursUnavailable;
+    }
     final todayIndex = DateTime.now().weekday - 1; // 0 = Monday, 6 = Sunday
     if (todayIndex >= 0 && todayIndex < widget.openingHours.length) {
       return widget.openingHours[todayIndex];
@@ -557,7 +563,9 @@ class _ExpandableHoursCardState extends State<_ExpandableHoursCard> {
     
     final todayTiming = _getTodayTiming();
     int colonIdx = todayTiming.indexOf(': ');
-    final todayDay = colonIdx != -1 ? todayTiming.substring(0, colonIdx) : 'Today';
+    final todayDay = colonIdx != -1
+        ? todayTiming.substring(0, colonIdx)
+        : context.l10n.todayLabel;
     final todayHours = colonIdx != -1 ? todayTiming.substring(colonIdx + 2) : todayTiming;
 
     return AnimatedContainer(
@@ -593,7 +601,7 @@ class _ExpandableHoursCardState extends State<_ExpandableHoursCard> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Today ($todayDay)',
+                            context.l10n.todayWithDay(todayDay),
                             style: const TextStyle(
                               color: FoodDetailScreen.mutedColor,
                               fontSize: 10,
@@ -697,8 +705,8 @@ class _FallbackNote extends StatelessWidget {
         Expanded(
           child: Text(
             googlePlaceId.startsWith('seed-')
-                ? 'This is local fallback data. Live Google Places details appear after syncing a real Place ID.'
-                : 'Live Google Places details are unavailable right now.',
+                ? context.l10n.seedFallbackNote
+                : context.l10n.livePlacesUnavailable,
             style: const TextStyle(
               color: FoodDetailScreen.goldColor,
               fontSize: 13,

@@ -1,0 +1,257 @@
+{
+  "@@locale": "ar",
+  "appTitle": "راحة",
+  "language": "اللغة",
+  "chooseLanguage": "اختر اللغة",
+  "english": "English",
+  "arabic": "العربية",
+  "systemDefault": "لغة الجهاز",
+  "homeTab": "الرئيسية",
+  "foodTab": "الطعام",
+  "servicesTab": "الخدمات",
+  "profileTab": "الملف الشخصي",
+  "loginCreateAccount": "أنشئ حسابك",
+  "loginWelcomeBack": "مرحباً بعودتك",
+  "loginDescription": "اكتشف الطعام والخدمات والنصائح المحلية لحياة المغتربين في الإمارات.",
+  "continueWithGoogle": "المتابعة باستخدام Google",
+  "or": "أو",
+  "name": "الاسم",
+  "email": "البريد الإلكتروني",
+  "password": "كلمة المرور",
+  "signUp": "إنشاء حساب",
+  "signIn": "تسجيل الدخول",
+  "alreadyHaveAccount": "لديك حساب بالفعل؟ سجّل الدخول",
+  "dontHaveAccount": "ليس لديك حساب؟ أنشئ حساباً",
+  "showPassword": "إظهار كلمة المرور",
+  "hidePassword": "إخفاء كلمة المرور",
+  "setupYourAccount": "إعداد حسابك",
+  "nationality": "الجنسية",
+  "city": "المدينة",
+  "neighbourhood": "المنطقة",
+  "interests": "الاهتمامات",
+  "continueLabel": "متابعة",
+  "neighbourhoodHint": "مثال: دبي مارينا، JLT",
+  "interestsHint": "مثال: طعام، تنظيف، استكشاف (مفصولة بفواصل)",
+  "goodMorning": "صباح الخير",
+  "goodAfternoon": "مساء الخير",
+  "goodEvening": "مساء الخير",
+  "friend": "صديقي",
+  "hiName": "مرحباً، {name}",
+  "@hiName": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "rahaToday": "راحة اليوم",
+  "heroDefaultTitle": "اكتشف ما يجعلك تشعر وكأنك في بيتك",
+  "heroDefaultSubtitle": "طعام وخدمات ومساعدة محلية مختارة بعناية حول {area}.",
+  "@heroDefaultSubtitle": {
+    "placeholders": {
+      "area": {
+        "type": "String"
+      }
+    }
+  },
+  "quickActions": "إجراءات سريعة",
+  "quickActionsSubtitle": "انتقل مباشرة إلى ما تحتاجه",
+  "findFood": "ابحث عن طعام",
+  "homeFlavours": "نكهات المنزل",
+  "bookHelp": "احجز خدمة",
+  "cleaningAndMore": "تنظيف وأكثر",
+  "madeForYourBase": "مصمم لاحتياجاتك",
+  "usefulPicksAround": "خيارات مفيدة في {city}",
+  "@usefulPicksAround": {
+    "placeholders": {
+      "city": {
+        "type": "String"
+      }
+    }
+  },
+  "usefulPicksRoutine": "خيارات مفيدة لروتينك اليومي",
+  "cityRhythm": "إيقاع {city}",
+  "@cityRhythm": {
+    "placeholders": {
+      "city": {
+        "type": "String"
+      }
+    }
+  },
+  "builtAround": "مبني حول {neighbourhood} وتفضيلاتك.",
+  "@builtAround": {
+    "placeholders": {
+      "neighbourhood": {
+        "type": "String"
+      }
+    }
+  },
+  "generalLifestyle": "نمط حياة عام",
+  "tasteOfHome": "مذاق الوطن",
+  "tasteOfHomeSubtitle": "ابدأ بالمطابخ الأقرب لما تحبه",
+  "openFoodFeed": "افتح قائمة الطعام",
+  "bookServiceFast": "احجز خدمة بسرعة",
+  "bookServiceFastSubtitle": "فئات شائعة للحياة اليومية في الإمارات",
+  "browseProviders": "تصفح المزوّدين",
+  "recentBooking": "آخر حجز",
+  "recentBookingSubtitle": "تابع آخر طلب قمت به",
+  "loadingLatestBooking": "جارٍ تحميل آخر حجز...",
+  "bookingHistoryAppear": "سيظهر سجل حجوزاتك هنا عند توفره.",
+  "noBookingsYet": "لا توجد حجوزات بعد",
+  "noBookingsYetSubtitle": "احجز خدمة تنظيف أو نقل أو صيانة للبدء.",
+  "serviceBooking": "حجز خدمة",
+  "aiPicksForYou": "اختيارات الذكاء الاصطناعي لك",
+  "aiPicksSubtitle": "توصيات مباشرة بناءً على ملفك الشخصي",
+  "moreRecommendations": "ستظهر هنا توصيات أكثر تخصيصاً كلما استخدمت راحة.",
+  "recommendedNow": "مقترح الآن",
+  "recommendedNowSubtitle": "مجموعة أوسع من أفكار الطعام والخدمات والنصائح المحلية",
+  "yourRaha": "راحة الخاصة بك",
+  "rahaUser": "مستخدم راحة",
+  "noEmailAssociated": "لا يوجد بريد إلكتروني مرتبط",
+  "expat": "مغترب",
+  "myBookings": "حجوزاتي",
+  "settings": "الإعدادات",
+  "account": "الحساب",
+  "editProfileDetails": "تعديل بيانات الملف الشخصي",
+  "updateNameCityNationality": "حدّث اسمك ومدينتك وجنسيتك",
+  "paymentMethods": "وسائل الدفع",
+  "manageSavedCards": "إدارة بطاقاتك المحفوظة",
+  "paymentMethodsSoon": "وسائل الدفع قريباً!",
+  "savedLocations": "الأماكن المحفوظة",
+  "favoriteFoodSpots": "أماكن الطعام المفضلة لديك",
+  "savedLocationsSoon": "الأماكن المحفوظة قريباً!",
+  "more": "المزيد",
+  "editProfile": "تعديل الملف الشخصي",
+  "personalInformation": "المعلومات الشخصية",
+  "locationAndBackground": "الموقع والخلفية",
+  "fullName": "الاسم الكامل",
+  "cityExample": "المدينة (مثال: دبي)",
+  "neighbourhoodExample": "المنطقة (مثال: JLT)",
+  "pleaseEnterYourName": "يرجى إدخال اسمك",
+  "pleaseEnterYourCity": "يرجى إدخال مدينتك",
+  "pleaseEnterYourNeighbourhood": "يرجى إدخال منطقتك",
+  "pleaseEnterYourNationality": "يرجى إدخال جنسيتك",
+  "saveChanges": "حفظ التغييرات",
+  "profileUpdatedSuccessfully": "تم تحديث الملف الشخصي بنجاح!",
+  "helpSupport": "المساعدة والدعم",
+  "getAccountAssistance": "احصل على مساعدة بخصوص حسابك",
+  "helpSupportSoon": "المساعدة والدعم قريباً!",
+  "logOut": "تسجيل الخروج",
+  "signOutSecurely": "سجّل الخروج من حسابك بأمان",
+  "failedToLoadBookings": "تعذر تحميل الحجوزات",
+  "retry": "إعادة المحاولة",
+  "noBookingsTitle": "لا توجد حجوزات بعد",
+  "noBookingsDescription": "لم تقم بأي مواعيد خدمة أو حجوزات مؤخراً.",
+  "unknownProvider": "مزود غير معروف",
+  "cancelBookingTitle": "إلغاء الحجز؟",
+  "cancelBookingMessage": "هل أنت متأكد أنك تريد إلغاء هذا الموعد؟",
+  "keepIt": "الاحتفاظ به",
+  "yesCancel": "نعم، إلغاء",
+  "cancelBooking": "إلغاء الحجز",
+  "scheduleService": "جدولة الخدمة",
+  "selectDateAndTime": "اختر التاريخ والوقت",
+  "bookingInstructionsHint": "أي تعليمات أو تفاصيل إضافية؟",
+  "selectAppointmentTime": "يرجى اختيار وقت الموعد",
+  "bookingRequestedSuccess": "تم إرسال طلب الحجز! سيؤكد المزود الموعد قريباً.",
+  "tryAgain": "حاول مرة أخرى",
+  "somethingWentWrong": "حدث خطأ ما",
+  "tasteOfHomeBanner": "نكهة الوطن",
+  "foodFromHome": "طعام من الوطن",
+  "cuisineComforts": "أطباق {cuisine} المريحة",
+  "@cuisineComforts": {
+    "placeholders": {
+      "cuisine": {
+        "type": "String"
+      }
+    }
+  },
+  "foodSpots": "أماكن الطعام",
+  "trustedHelpBanner": "خدمات موثوقة",
+  "homeServices": "الخدمات المنزلية",
+  "searchProviders": "ابحث عن مزودي الخدمة...",
+  "bookVerifiedProvidersAround": "احجز مزودين موثوقين في {city}",
+  "@bookVerifiedProvidersAround": {
+    "placeholders": {
+      "city": {
+        "type": "String"
+      }
+    }
+  },
+  "noResultsFor": "لا توجد نتائج لـ \"{query}\"",
+  "@noResultsFor": {
+    "placeholders": {
+      "query": {
+        "type": "String"
+      }
+    }
+  },
+  "yourCity": "مدينتك",
+  "homeServicesType": "الخدمات المنزلية",
+  "verified": "موثّق",
+  "available": "متاح",
+  "comingToCitySoon": "قريباً في {city}",
+  "@comingToCitySoon": {
+    "placeholders": {
+      "city": {
+        "type": "String"
+      }
+    }
+  },
+  "expandingTypeToCity": "نحن نوسّع {type} إلى {city}. عد لاحقاً - نضيف مدناً جديدة باستمرار!",
+  "@expandingTypeToCity": {
+    "placeholders": {
+      "type": {
+        "type": "String"
+      },
+      "city": {
+        "type": "String"
+      }
+    }
+  },
+  "ratingSuffix": "تقييم",
+  "cuisine": "المطبخ",
+  "reviewsCount": "{count} مراجعات",
+  "@reviewsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "details": "التفاصيل",
+  "openingHours": "ساعات العمل",
+  "livePlaces": "بيانات مباشرة",
+  "localData": "بيانات محلية",
+  "directions": "الاتجاهات",
+  "call": "اتصال",
+  "location": "الموقع",
+  "phone": "الهاتف",
+  "openingHoursUnavailable": "ساعات العمل غير متاحة",
+  "todayLabel": "اليوم",
+  "todayWithDay": "اليوم ({day})",
+  "@todayWithDay": {
+    "placeholders": {
+      "day": {
+        "type": "String"
+      }
+    }
+  },
+  "seedFallbackNote": "هذه بيانات محلية احتياطية. ستظهر تفاصيل Google Places المباشرة بعد مزامنة معرّف مكان حقيقي.",
+  "livePlacesUnavailable": "تفاصيل Google Places المباشرة غير متاحة حالياً.",
+  "serviceRating": "تقييم {rating}",
+  "@serviceRating": {
+    "placeholders": {
+      "rating": {
+        "type": "String"
+      }
+    }
+  },
+  "verifiedPartner": "شريك موثّق",
+  "aboutProvider": "حول المزوّد",
+  "serviceArea": "منطقة الخدمة",
+  "contactNumber": "رقم التواصل",
+  "bookThisProvider": "احجز هذا المزوّد",
+  "confirmBooking": "تأكيد الحجز",
+  "cancel": "إلغاء",
+  "finalRatesMayDiffer": "قد تختلف الأسعار النهائية قليلاً حسب نطاق الخدمة."
+}

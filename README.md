@@ -22,7 +22,9 @@
 - App update checker linked to GitHub Releases
 - Stateful bottom-tab routing
 - Branded native splash screen and launcher icons
-
+- Offline support with cached read fallback in Flutter repositories
+- Arabic and English support with locale switching
+- RTL support for Arabic
 
 ---
 

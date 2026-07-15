@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../core/localization/l10n.dart';
 
 class RahaErrorWidget extends StatelessWidget {
   const RahaErrorWidget({
@@ -17,7 +18,12 @@ class RahaErrorWidget extends StatelessWidget {
         const SizedBox(height: 12),
         Text(message),
         const SizedBox(height: 12),
-        ElevatedButton(onPressed: onRetry, child: const Text('Try Again')),
+        ElevatedButton(
+          onPressed: onRetry,
+          child: Builder(
+            builder: (context) => Text(context.l10n.tryAgain),
+          ),
+        ),
       ],
     ),
   );

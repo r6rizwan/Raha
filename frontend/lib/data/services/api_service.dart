@@ -7,7 +7,7 @@ import '../../core/errors/failures.dart';
 final apiServiceProvider = Provider<ApiService>((ref) => ApiService(ref));
 const _baseUrl = String.fromEnvironment(
   'BASE_URL',
-  defaultValue: 'http://10.0.2.2:5000',
+  defaultValue: 'https://raha-c9e7.onrender.com',
 );
 
 class ApiService {

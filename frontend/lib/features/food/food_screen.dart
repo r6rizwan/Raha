@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/constants/cuisine_types.dart';
 import '../../core/errors/failures.dart';
+import '../../core/localization/l10n.dart';
 import '../../data/models/paginated_food_model.dart';
 import '../../data/repositories/auth_repository.dart';
 import '../../shared/widgets/raha_card.dart';
@@ -33,6 +34,7 @@ class _FoodScreenState extends ConsumerState<FoodScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     final user = ref.watch(userProfileProvider).value;
     final cuisines = cuisineTypesForNationality(user?.nationality);
     final filter = FoodFilter(city: user?.city ?? 'Dubai', cuisine: cuisine);
@@ -55,8 +57,8 @@ class _FoodScreenState extends ConsumerState<FoodScreen> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
-                        'TASTE OF HOME',
+                      Text(
+                        l10n.tasteOfHomeBanner,
                         style: TextStyle(
                           fontSize: 9,
                           fontWeight: FontWeight.w800,
@@ -67,8 +69,8 @@ class _FoodScreenState extends ConsumerState<FoodScreen> {
                       const SizedBox(height: 4),
                       Text(
                         cuisine != null
-                            ? '$cuisine Comforts'
-                            : 'Food From Home',
+                            ? l10n.cuisineComforts(cuisine!)
+                            : l10n.foodFromHome,
                         style: const TextStyle(
                           fontSize: 22,
                           fontWeight: FontWeight.w800,
@@ -170,7 +172,10 @@ class _FoodScreenState extends ConsumerState<FoodScreen> {
                               onRetry: () => ref.invalidate(provider),
                             ),
                             data: (food) => food.spots.isEmpty
-                                ? _CityExpandingEmptyState(city: filter.city, type: 'food spots')
+                                ? _CityExpandingEmptyState(
+                                    city: filter.city,
+                                    type: l10n.foodSpots,
+                                  )
                                 : NotificationListener<ScrollEndNotification>(
                                     onNotification: (_) {
                                       ref.read(provider.notifier).loadMore();
@@ -335,6 +340,7 @@ class _CityExpandingEmptyState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     return Center(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 32),
@@ -353,7 +359,7 @@ class _CityExpandingEmptyState extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             Text(
-              'Coming to $city soon',
+              l10n.comingToCitySoon(city),
               textAlign: TextAlign.center,
               style: const TextStyle(
                 fontSize: 16,
@@ -363,7 +369,7 @@ class _CityExpandingEmptyState extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              "We're expanding our $type to $city. Check back soon — we add new cities regularly!",
+              l10n.expandingTypeToCity(type, city),
               textAlign: TextAlign.center,
               style: const TextStyle(
                 fontSize: 13,

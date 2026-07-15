@@ -1,0 +1,258 @@
+{
+  "@@locale": "en",
+  "appTitle": "Raha",
+  "language": "Language",
+  "chooseLanguage": "Choose language",
+  "english": "English",
+  "arabic": "Arabic",
+  "systemDefault": "System default",
+  "homeTab": "Home",
+  "foodTab": "Food",
+  "servicesTab": "Services",
+  "profileTab": "Profile",
+  "loginCreateAccount": "Create your account",
+  "loginWelcomeBack": "Welcome back",
+  "loginDescription": "Discover food, services, and local tips for expat life in the UAE.",
+  "continueWithGoogle": "Continue with Google",
+  "or": "or",
+  "name": "Name",
+  "email": "Email",
+  "password": "Password",
+  "signUp": "Sign Up",
+  "signIn": "Sign In",
+  "alreadyHaveAccount": "Already have an account? Sign In",
+  "dontHaveAccount": "Don't have an account? Sign Up",
+  "showPassword": "Show password",
+  "hidePassword": "Hide password",
+  "setupYourAccount": "Setup Your Account",
+  "nationality": "Nationality",
+  "city": "City",
+  "neighbourhood": "Neighbourhood",
+  "interests": "Interests",
+  "continueLabel": "Continue",
+  "neighbourhoodHint": "e.g. Dubai Marina, JLT",
+  "interestsHint": "e.g. Food, Cleaning, Exploring (Comma-separated)",
+  "goodMorning": "Good morning",
+  "goodAfternoon": "Good afternoon",
+  "goodEvening": "Good evening",
+  "friend": "there",
+  "hiName": "Hi, {name}",
+  "@hiName": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "rahaToday": "RAHA TODAY",
+  "heroDefaultTitle": "Discover what feels familiar",
+  "heroDefaultSubtitle": "Food, services, and local help curated around {area}.",
+  "@heroDefaultSubtitle": {
+    "placeholders": {
+      "area": {
+        "type": "String"
+      }
+    }
+  },
+  "quickActions": "Quick actions",
+  "quickActionsSubtitle": "Jump straight into what you need",
+  "findFood": "Find food",
+  "homeFlavours": "Home flavours",
+  "bookHelp": "Book help",
+  "cleaningAndMore": "Cleaning and more",
+  "madeForYourBase": "Made for your base",
+  "usefulPicksAround": "Useful picks around {city}",
+  "@usefulPicksAround": {
+    "placeholders": {
+      "city": {
+        "type": "String"
+      }
+    }
+  },
+  "usefulPicksRoutine": "Useful picks for your daily routine",
+  "cityRhythm": "{city} rhythm",
+  "@cityRhythm": {
+    "placeholders": {
+      "city": {
+        "type": "String"
+      }
+    }
+  },
+  "builtAround": "Built around {neighbourhood} and your preferences.",
+  "@builtAround": {
+    "placeholders": {
+      "neighbourhood": {
+        "type": "String"
+      }
+    }
+  },
+  "generalLifestyle": "General lifestyle",
+  "tasteOfHome": "Taste of home",
+  "tasteOfHomeSubtitle": "Start with cuisines likely to feel familiar",
+  "openFoodFeed": "Open food feed",
+  "bookServiceFast": "Book a service fast",
+  "bookServiceFastSubtitle": "Popular categories for busy UAE city life",
+  "browseProviders": "Browse providers",
+  "recentBooking": "Recent booking",
+  "recentBookingSubtitle": "Keep track of your latest request",
+  "loadingLatestBooking": "Loading your latest booking...",
+  "bookingHistoryAppear": "Your booking history will appear here once it is available.",
+  "noBookingsYet": "No bookings yet",
+  "noBookingsYetSubtitle": "Book a cleaner, mover, or handyman to get started.",
+  "serviceBooking": "Service booking",
+  "aiPicksForYou": "AI Picks for You",
+  "aiPicksSubtitle": "Live recommendations based on your profile",
+  "moreRecommendations": "More personalised recommendations will appear here as you use Raha.",
+  "recommendedNow": "Recommended now",
+  "recommendedNowSubtitle": "A fuller set of ideas for food, services, and local tips",
+  "yourRaha": "YOUR RAHA",
+  "rahaUser": "Raha User",
+  "noEmailAssociated": "No email associated",
+  "expat": "Expat",
+  "myBookings": "My Bookings",
+  "settings": "Settings",
+  "account": "Account",
+  "editProfileDetails": "Edit Profile Details",
+  "updateNameCityNationality": "Update your name, city, and nationality",
+  "paymentMethods": "Payment Methods",
+  "manageSavedCards": "Manage your saved cards",
+  "paymentMethodsSoon": "Payment Methods coming soon!",
+  "savedLocations": "Saved Locations",
+  "favoriteFoodSpots": "Your favorite food spots",
+  "savedLocationsSoon": "Saved Locations coming soon!",
+  "more": "More",
+  "editProfile": "Edit Profile",
+  "personalInformation": "Personal Information",
+  "locationAndBackground": "Location & Background",
+  "fullName": "Full Name",
+  "cityExample": "City (e.g. Dubai)",
+  "neighbourhoodExample": "Neighbourhood (e.g. JLT)",
+  "pleaseEnterYourName": "Please enter your name",
+  "pleaseEnterYourCity": "Please enter your city",
+  "pleaseEnterYourNeighbourhood": "Please enter your neighbourhood",
+  "pleaseEnterYourNationality": "Please enter your nationality",
+  "saveChanges": "Save Changes",
+  "profileUpdatedSuccessfully": "Profile updated successfully!",
+  "helpSupport": "Help & Support",
+  "getAccountAssistance": "Get assistance with your account",
+  "helpSupportSoon": "Help & Support coming soon!",
+  "logOut": "Log Out",
+  "signOutSecurely": "Sign out of your account securely",
+  "failedToLoadBookings": "Failed to load bookings",
+  "retry": "Retry",
+  "noBookingsTitle": "No Bookings Yet",
+  "noBookingsDescription": "You haven't made any service appointments or reservations recently.",
+  "unknownProvider": "Unknown Provider",
+  "cancelBookingTitle": "Cancel Booking?",
+  "cancelBookingMessage": "Are you sure you want to cancel this appointment?",
+  "keepIt": "Keep it",
+  "yesCancel": "Yes, cancel",
+  "cancelBooking": "Cancel booking",
+  "scheduleService": "SCHEDULE SERVICE",
+  "selectDateAndTime": "Select date and time",
+  "bookingInstructionsHint": "Any special instructions or details?",
+  "selectAppointmentTime": "Please select an appointment time",
+  "bookingRequestedSuccess": "Booking requested! Provider will confirm shortly.",
+  "tryAgain": "Try Again",
+  "somethingWentWrong": "Something went wrong"
+  ,
+  "tasteOfHomeBanner": "TASTE OF HOME",
+  "foodFromHome": "Food From Home",
+  "cuisineComforts": "{cuisine} Comforts",
+  "@cuisineComforts": {
+    "placeholders": {
+      "cuisine": {
+        "type": "String"
+      }
+    }
+  },
+  "foodSpots": "food spots",
+  "trustedHelpBanner": "TRUSTED HELP",
+  "homeServices": "Home Services",
+  "searchProviders": "Search providers...",
+  "bookVerifiedProvidersAround": "Book verified providers around {city}",
+  "@bookVerifiedProvidersAround": {
+    "placeholders": {
+      "city": {
+        "type": "String"
+      }
+    }
+  },
+  "noResultsFor": "No results for \"{query}\"",
+  "@noResultsFor": {
+    "placeholders": {
+      "query": {
+        "type": "String"
+      }
+    }
+  },
+  "yourCity": "your city",
+  "homeServicesType": "home services",
+  "verified": "Verified",
+  "available": "Available",
+  "comingToCitySoon": "Coming to {city} soon",
+  "@comingToCitySoon": {
+    "placeholders": {
+      "city": {
+        "type": "String"
+      }
+    }
+  },
+  "expandingTypeToCity": "We're expanding our {type} to {city}. Check back soon - we add new cities regularly!",
+  "@expandingTypeToCity": {
+    "placeholders": {
+      "type": {
+        "type": "String"
+      },
+      "city": {
+        "type": "String"
+      }
+    }
+  },
+  "ratingSuffix": "rating",
+  "cuisine": "Cuisine",
+  "reviewsCount": "{count} reviews",
+  "@reviewsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "details": "Details",
+  "openingHours": "Opening Hours",
+  "livePlaces": "Live Places",
+  "localData": "Local data",
+  "directions": "Directions",
+  "call": "Call",
+  "location": "Location",
+  "phone": "Phone",
+  "openingHoursUnavailable": "Opening hours unavailable",
+  "todayLabel": "Today",
+  "todayWithDay": "Today ({day})",
+  "@todayWithDay": {
+    "placeholders": {
+      "day": {
+        "type": "String"
+      }
+    }
+  },
+  "seedFallbackNote": "This is local fallback data. Live Google Places details appear after syncing a real Place ID.",
+  "livePlacesUnavailable": "Live Google Places details are unavailable right now.",
+  "serviceRating": "{rating} Rating",
+  "@serviceRating": {
+    "placeholders": {
+      "rating": {
+        "type": "String"
+      }
+    }
+  },
+  "verifiedPartner": "Verified Partner",
+  "aboutProvider": "ABOUT PROVIDER",
+  "serviceArea": "Service Area",
+  "contactNumber": "Contact Number",
+  "bookThisProvider": "Book this provider",
+  "confirmBooking": "Confirm Booking",
+  "cancel": "Cancel",
+  "finalRatesMayDiffer": "Final rates may differ slightly depending on scope of service."
+}

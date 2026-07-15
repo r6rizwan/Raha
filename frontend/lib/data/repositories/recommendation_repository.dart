@@ -21,10 +21,14 @@ class RecommendationRepository {
 
   Future<Either<Failure, List<AIRecommendationModel>>> getRecommendations(
     String uid,
+    String lang,
   ) async {
-    final cacheKey = 'recommendations:$uid';
+    final cacheKey = 'recommendations:$uid:$lang';
     try {
-      final r = await _api.dio.get('/api/recommendations/$uid');
+      final r = await _api.dio.get(
+        '/api/recommendations/$uid',
+        queryParameters: {'lang': lang},
+      );
       final data = (r.data['data'] as List? ?? [])
           .map((e) => AIRecommendationModel.fromJson(e))
           .toList();

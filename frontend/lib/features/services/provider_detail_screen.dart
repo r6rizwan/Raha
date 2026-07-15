@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/errors/failures.dart';
+import '../../core/localization/l10n.dart';
 import '../../data/models/service_provider_model.dart';
 import '../../data/repositories/service_repository.dart';
 import '../../shared/widgets/raha_error_widget.dart';
@@ -37,6 +38,7 @@ class ProviderDetailScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
     final provider = providerDetailProvider(providerId);
 
     return ref
@@ -49,7 +51,7 @@ class ProviderDetailScreen extends ConsumerWidget {
           error: (e, _) => Scaffold(
             backgroundColor: backgroundColor,
             body: RahaErrorWidget(
-              message: e is Failure ? e.message : 'Something went wrong',
+              message: e is Failure ? e.message : l10n.somethingWentWrong,
               onRetry: () => ref.invalidate(provider),
             ),
           ),
@@ -165,8 +167,9 @@ class ProviderDetailScreen extends ConsumerWidget {
                                   children: [
                                     _buildPillTag(
                                       icon: Icons.star_rounded,
-                                      label:
-                                          '${item.rating.toStringAsFixed(1)} Rating',
+                                      label: l10n.serviceRating(
+                                        item.rating.toStringAsFixed(1),
+                                      ),
                                       color: textColor,
                                       bgColor: cardColor,
                                       hasBorder: true,
@@ -181,7 +184,7 @@ class ProviderDetailScreen extends ConsumerWidget {
                                     if (item.isVerified)
                                       _buildPillTag(
                                         icon: Icons.verified_user_rounded,
-                                        label: 'Verified Partner',
+                                        label: l10n.verifiedPartner,
                                         color: primaryColor,
                                         bgColor: mintBgColor,
                                       ),
@@ -191,8 +194,8 @@ class ProviderDetailScreen extends ConsumerWidget {
 
                                 // --- PROVIDER BIO BLOCK ---
                                 if (item.bio.isNotEmpty) ...[
-                                  const Text(
-                                    'ABOUT PROVIDER',
+                                  Text(
+                                    l10n.aboutProvider,
                                     style: TextStyle(
                                       fontSize: 10,
                                       fontWeight: FontWeight.w800,
@@ -231,7 +234,7 @@ class ProviderDetailScreen extends ConsumerWidget {
                                     children: [
                                       _buildInfoRow(
                                         Icons.location_city_outlined,
-                                        'Service Area',
+                                        l10n.serviceArea,
                                         item.city,
                                       ),
                                       if (item.contactPhone.isNotEmpty) ...[
@@ -241,7 +244,7 @@ class ProviderDetailScreen extends ConsumerWidget {
                                         ),
                                         _buildInfoRow(
                                           Icons.phone_outlined,
-                                          'Contact Number',
+                                          l10n.contactNumber,
                                           item.contactPhone,
                                         ),
                                       ],
@@ -288,8 +291,8 @@ class ProviderDetailScreen extends ConsumerWidget {
                           backgroundColor: Colors.transparent,
                           builder: (_) => BookingSheet(provider: item),
                         ),
-                        child: const Text(
-                          'Book this provider',
+                        child: Text(
+                          l10n.bookThisProvider,
                           style: TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w700,
