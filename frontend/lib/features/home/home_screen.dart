@@ -1,3 +1,5 @@
+import 'dart:ui' as ui;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -38,7 +40,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      performVersionCheck(context, ref, '1.0.1');
+      performVersionCheck(context, ref);
     });
   }
 
@@ -47,6 +49,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     final profile = ref.watch(userProfileProvider).value;
     final l10n = context.l10n;
     final name = profile?.name.isNotEmpty == true ? profile!.name : l10n.friend;
+    final isRtl = Directionality.of(context) == ui.TextDirection.rtl;
     final recommendationState = ref.watch(recommendationProvider);
     final bookingState = ref.watch(bookingNotifierProvider);
 
@@ -63,6 +66,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.center,
+                textDirection: isRtl
+                    ? ui.TextDirection.rtl
+                    : ui.TextDirection.ltr,
                 children: [
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -76,13 +82,21 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                         ),
                       ),
                       const SizedBox(height: 4),
-                      Text(
-                        l10n.hiName(name),
-                        style: const TextStyle(
-                          fontSize: 22,
-                          fontWeight: FontWeight.w800,
-                          color: Colors.white,
-                          letterSpacing: -0.2,
+                      FittedBox(
+                        fit: BoxFit.scaleDown,
+                        alignment: isRtl
+                            ? Alignment.centerRight
+                            : Alignment.centerLeft,
+                        child: Text(
+                          l10n.hiName(_displayLabel(name)),
+                          textAlign: isRtl ? TextAlign.right : TextAlign.left,
+                          maxLines: 1,
+                          style: const TextStyle(
+                            fontSize: 22,
+                            fontWeight: FontWeight.w800,
+                            color: Colors.white,
+                            letterSpacing: -0.2,
+                          ),
                         ),
                       ),
                     ],
@@ -135,7 +149,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     ),
                   ),
                   data: (items) => ListView(
-                    padding: const EdgeInsets.fromLTRB(16, 18, 16, 28),
+                    padding: const EdgeInsets.fromLTRB(16, 18, 16, 112),
                     children: [
                       _buildHero(profile, items),
                       const SizedBox(height: 18),
@@ -149,16 +163,15 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       _sectionTitle(
                         l10n.madeForYourBase,
                         profile?.city.isNotEmpty == true
-                            ? l10n.usefulPicksAround(profile!.city)
+                            ? l10n.usefulPicksAround(
+                                _displayLocalizedProfileValue(profile!.city),
+                              )
                             : l10n.usefulPicksRoutine,
                       ),
                       const SizedBox(height: 12),
                       _buildContextCard(profile),
                       const SizedBox(height: 20),
-                      _sectionTitle(
-                        l10n.tasteOfHome,
-                        l10n.tasteOfHomeSubtitle,
-                      ),
+                      _sectionTitle(l10n.tasteOfHome, l10n.tasteOfHomeSubtitle),
                       const SizedBox(height: 12),
                       _buildCuisineRail(context, profile),
                       const SizedBox(height: 20),
@@ -176,10 +189,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       const SizedBox(height: 12),
                       _buildRecentBooking(context, bookingState),
                       const SizedBox(height: 20),
-                      _sectionTitle(
-                        l10n.aiPicksForYou,
-                        l10n.aiPicksSubtitle,
-                      ),
+                      _sectionTitle(l10n.aiPicksForYou, l10n.aiPicksSubtitle),
                       const SizedBox(height: 12),
                       _buildRecommendationRail(context, items),
                       const SizedBox(height: 20),
@@ -188,10 +198,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                         l10n.recommendedNowSubtitle,
                       ),
                       const SizedBox(height: 12),
-                      ...items.map((item) => Padding(
-                            padding: const EdgeInsets.only(bottom: 12),
-                            child: _buildRecommendationCard(context, item),
-                          )),
+                      ...items.map(
+                        (item) => Padding(
+                          padding: const EdgeInsets.only(bottom: 12),
+                          child: _buildRecommendationCard(context, item),
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -210,6 +222,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     final neighbourhood = profile?.neighbourhood.isNotEmpty == true
         ? profile!.neighbourhood
         : 'your area';
+    final isRtl = Directionality.of(context) == ui.TextDirection.rtl;
 
     return Container(
       padding: const EdgeInsets.all(20),
@@ -218,11 +231,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         gradient: const LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [
-            Color(0xFF113B31),
-            Color(0xFF0A5D4B),
-            Color(0xFF1C7A63),
-          ],
+          colors: [Color(0xFF113B31), Color(0xFF0A5D4B), Color(0xFF1C7A63)],
         ),
         boxShadow: [
           BoxShadow(
@@ -236,9 +245,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
+            textDirection: isRtl ? ui.TextDirection.rtl : ui.TextDirection.ltr,
             children: [
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 5,
+                ),
                 decoration: BoxDecoration(
                   color: goldColor.withValues(alpha: 0.2),
                   borderRadius: BorderRadius.circular(20),
@@ -265,6 +278,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           const SizedBox(height: 16),
           Text(
             hero?.title ?? l10n.heroDefaultTitle,
+            textAlign: isRtl ? TextAlign.right : TextAlign.left,
             style: const TextStyle(
               fontSize: 24,
               height: 1.05,
@@ -275,7 +289,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           const SizedBox(height: 8),
           Text(
             hero?.subtitle ??
-                l10n.heroDefaultSubtitle(neighbourhood),
+                l10n.heroDefaultSubtitle(_displayLabel(neighbourhood)),
+            textAlign: isRtl ? TextAlign.right : TextAlign.left,
             style: TextStyle(
               fontSize: 13,
               height: 1.45,
@@ -286,15 +301,22 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           Wrap(
             spacing: 8,
             runSpacing: 8,
+            textDirection: isRtl ? ui.TextDirection.rtl : ui.TextDirection.ltr,
             children: [
-              _heroStat(Icons.location_on_rounded, location),
+              _heroStat(
+                Icons.location_on_rounded,
+                _displayLocalizedProfileValue(location),
+              ),
               _heroStat(
                 Icons.flag_rounded,
                 profile?.nationality.isNotEmpty == true
-                    ? profile!.nationality
-                    : 'Expat life',
+                    ? _displayLocalizedProfileValue(profile!.nationality)
+                    : _displayLabel('Expat life'),
               ),
-              _heroStat(Icons.explore_rounded, hero?.ctaLabel ?? 'Explore'),
+              _heroStat(
+                Icons.explore_rounded,
+                _localizedRecommendationCta(hero?.ctaLabel ?? 'Explore'),
+              ),
             ],
           ),
         ],
@@ -303,6 +325,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   }
 
   Widget _heroStat(IconData icon, String label) {
+    final isRtl = Directionality.of(context) == ui.TextDirection.rtl;
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
       decoration: BoxDecoration(
@@ -311,11 +334,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
+        textDirection: isRtl ? ui.TextDirection.rtl : ui.TextDirection.ltr,
         children: [
           Icon(icon, size: 14, color: goldColor),
           const SizedBox(width: 6),
           Text(
-            label,
+            _displayLabel(label),
             style: const TextStyle(
               fontSize: 11,
               fontWeight: FontWeight.w700,
@@ -404,10 +428,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             const SizedBox(height: 4),
             Text(
               subtitle,
-              style: const TextStyle(
-                fontSize: 12,
-                color: mutedColor,
-              ),
+              style: const TextStyle(fontSize: 12, color: mutedColor),
             ),
           ],
         ),
@@ -420,9 +441,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     final neighbourhood = profile?.neighbourhood.isNotEmpty == true
         ? profile!.neighbourhood
         : 'your neighbourhood';
-    final interests = profile?.interestTags.where((tag) => tag.isNotEmpty).toList() ?? const <String>[];
+    final interests =
+        profile?.interestTags.where((tag) => tag.isNotEmpty).toList() ??
+        const <String>[];
 
     final l10n = context.l10n;
+    final isRtl = Directionality.of(context) == ui.TextDirection.rtl;
     return Container(
       padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
@@ -434,6 +458,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
+            textDirection: isRtl ? ui.TextDirection.rtl : ui.TextDirection.ltr,
             children: [
               Container(
                 width: 44,
@@ -443,10 +468,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   borderRadius: BorderRadius.circular(14),
                 ),
                 alignment: Alignment.center,
-                child: const Icon(
-                  Icons.apartment_rounded,
-                  color: primaryColor,
-                ),
+                child: const Icon(Icons.apartment_rounded, color: primaryColor),
               ),
               const SizedBox(width: 12),
               Expanded(
@@ -454,7 +476,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      l10n.cityRhythm(location),
+                      l10n.cityRhythm(
+                        _displayLabel(_localizedCityLabel(location)),
+                      ),
+                      textAlign: isRtl ? TextAlign.right : TextAlign.left,
                       style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w800,
@@ -463,11 +488,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     ),
                     const SizedBox(height: 2),
                     Text(
-                      l10n.builtAround(neighbourhood),
-                      style: const TextStyle(
-                        fontSize: 12,
-                        color: mutedColor,
-                      ),
+                      _contextSubtitle(neighbourhood),
+                      textAlign: isRtl ? TextAlign.right : TextAlign.left,
+                      style: const TextStyle(fontSize: 12, color: mutedColor),
                     ),
                   ],
                 ),
@@ -478,14 +501,28 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           Wrap(
             spacing: 8,
             runSpacing: 8,
+            textDirection: isRtl ? ui.TextDirection.rtl : ui.TextDirection.ltr,
             children: [
-              _infoChip(Icons.location_pin, location),
+              _infoChip(
+                Icons.location_pin,
+                _displayLocalizedProfileValue(location),
+              ),
               if (profile?.nationality.isNotEmpty == true)
-                _infoChip(Icons.flag_circle_rounded, profile!.nationality),
+                _infoChip(
+                  Icons.flag_circle_rounded,
+                  _displayLocalizedProfileValue(profile!.nationality),
+                ),
               if (interests.isEmpty)
                 _infoChip(Icons.favorite_rounded, l10n.generalLifestyle)
               else
-                ...interests.take(3).map((tag) => _infoChip(Icons.local_fire_department_rounded, tag)),
+                ...interests
+                    .take(3)
+                    .map(
+                      (tag) => _infoChip(
+                        Icons.local_fire_department_rounded,
+                        _displayLabel(tag),
+                      ),
+                    ),
             ],
           ),
         ],
@@ -494,6 +531,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   }
 
   Widget _infoChip(IconData icon, String label) {
+    final isRtl = Directionality.of(context) == ui.TextDirection.rtl;
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
       decoration: BoxDecoration(
@@ -502,11 +540,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
+        textDirection: isRtl ? ui.TextDirection.rtl : ui.TextDirection.ltr,
         children: [
           Icon(icon, size: 14, color: primaryColor),
           const SizedBox(width: 6),
           Text(
-            label,
+            _displayLabel(label),
             style: const TextStyle(
               fontSize: 11,
               fontWeight: FontWeight.w700,
@@ -519,7 +558,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   }
 
   Widget _buildCuisineRail(BuildContext context, UserModel? profile) {
-    final cuisines = cuisineTypesForNationality(profile?.nationality).take(6).toList();
+    final cuisines = cuisineTypesForNationality(
+      profile?.nationality,
+    ).take(6).toList();
 
     return SizedBox(
       height: 112,
@@ -535,14 +576,18 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               width: 128,
               padding: const EdgeInsets.all(14),
               decoration: BoxDecoration(
-                color: index.isEven ? const Color(0xFFF5EEDF) : const Color(0xFFE8F3EF),
+                color: index.isEven
+                    ? const Color(0xFFF5EEDF)
+                    : const Color(0xFFE8F3EF),
                 borderRadius: BorderRadius.circular(18),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Icon(
-                    index.isEven ? Icons.ramen_dining_rounded : Icons.restaurant_rounded,
+                    index.isEven
+                        ? Icons.ramen_dining_rounded
+                        : Icons.restaurant_rounded,
                     color: primaryColor,
                   ),
                   const Spacer(),
@@ -557,10 +602,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   const SizedBox(height: 2),
                   Text(
                     context.l10n.openFoodFeed,
-                    style: TextStyle(
-                      fontSize: 11,
-                      color: mutedColor,
-                    ),
+                    style: TextStyle(fontSize: 11, color: mutedColor),
                   ),
                 ],
               ),
@@ -601,14 +643,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       borderRadius: BorderRadius.circular(12),
                     ),
                     alignment: Alignment.center,
-                    child: Icon(
-                      _serviceIcon(category),
-                      color: primaryColor,
-                    ),
+                    child: Icon(_serviceIcon(category), color: primaryColor),
                   ),
                   const Spacer(),
                   Text(
-                    category,
+                    _localizedServiceCategory(category),
                     style: const TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.w800,
@@ -643,10 +682,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         ),
         child: Text(
           context.l10n.loadingLatestBooking,
-          style: TextStyle(
-            fontSize: 13,
-            color: mutedColor,
-          ),
+          style: TextStyle(fontSize: 13, color: mutedColor),
         ),
       ),
       error: (_, _) => Container(
@@ -658,10 +694,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         ),
         child: Text(
           context.l10n.bookingHistoryAppear,
-          style: TextStyle(
-            fontSize: 13,
-            color: mutedColor,
-          ),
+          style: TextStyle(fontSize: 13, color: mutedColor),
         ),
       ),
       data: (bookings) {
@@ -760,10 +793,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       const SizedBox(height: 4),
                       Text(
                         '${toBeginningOfSentenceCase(booking.status)} · ${DateFormat('EEE, d MMM · h:mm a').format(booking.scheduledAt)}',
-                        style: const TextStyle(
-                          fontSize: 12,
-                          color: mutedColor,
-                        ),
+                        style: const TextStyle(fontSize: 12, color: mutedColor),
                       ),
                     ],
                   ),
@@ -817,10 +847,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 gradient: LinearGradient(
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
-                  colors: [
-                    config.$1,
-                    config.$1.withValues(alpha: 0.82),
-                  ],
+                  colors: [config.$1, config.$1.withValues(alpha: 0.82)],
                 ),
               ),
               child: Column(
@@ -838,7 +865,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                           borderRadius: BorderRadius.circular(20),
                         ),
                         child: Text(
-                          item.ctaLabel,
+                          _localizedRecommendationCta(item.ctaLabel),
                           style: const TextStyle(
                             fontSize: 10,
                             fontWeight: FontWeight.w800,
@@ -939,7 +966,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   ),
                   const SizedBox(height: 10),
                   Text(
-                    item.ctaLabel,
+                    _localizedRecommendationCta(item.ctaLabel),
                     style: const TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.w800,
@@ -956,6 +983,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   }
 
   Widget _sectionTitle(String title, String subtitle) {
+    final isRtl = Directionality.of(context) == ui.TextDirection.rtl;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 4),
       child: Column(
@@ -963,6 +991,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         children: [
           Text(
             title,
+            textAlign: isRtl ? TextAlign.right : TextAlign.left,
             style: const TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w800,
@@ -972,11 +1001,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           ),
           const SizedBox(height: 4),
           Text(
-            subtitle,
-            style: const TextStyle(
-              fontSize: 12,
-              color: mutedColor,
-            ),
+            _displayLabel(subtitle),
+            textAlign: isRtl ? TextAlign.right : TextAlign.left,
+            style: const TextStyle(fontSize: 12, color: mutedColor),
           ),
         ],
       ),
@@ -1015,6 +1042,94 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       default:
         return (const Color(0xFF1F6A54), Icons.restaurant_rounded);
     }
+  }
+
+  String _localizedRecommendationCta(String label) {
+    final l10n = context.l10n;
+    switch (label.trim()) {
+      case 'Explore':
+        return l10n.exploreAction;
+      case 'Book Now':
+        return l10n.bookNowAction;
+      case 'Read More':
+        return l10n.readMoreAction;
+      default:
+        return label;
+    }
+  }
+
+  String _localizedServiceCategory(String category) {
+    switch (category.trim()) {
+      case 'Cleaning':
+        return context.l10n.cleaningCategory;
+      case 'Maintenance':
+        return context.l10n.maintenanceCategory;
+      case 'Movers':
+        return context.l10n.moversCategory;
+      case 'Handyman':
+        return context.l10n.handymanCategory;
+      default:
+        return category;
+    }
+  }
+
+  String _contextSubtitle(String neighbourhood) {
+    final l10n = context.l10n;
+    final isRtl = Directionality.of(context) == ui.TextDirection.rtl;
+    final trimmed = neighbourhood.trim();
+    if (isRtl && RegExp(r'[A-Za-z]').hasMatch(trimmed)) {
+      return l10n.builtAroundPreferences;
+    }
+    return l10n.builtAround(_displayLabel(trimmed));
+  }
+
+  String _displayLocalizedProfileValue(String value) {
+    final localized = _localizedCityLabel(value);
+    if (localized != value) return localized;
+    return _localizedNationalityLabel(value);
+  }
+
+  String _localizedCityLabel(String value) {
+    if (Directionality.of(context) != ui.TextDirection.rtl) return value;
+    switch (value.trim()) {
+      case 'Dubai':
+        return 'دبي';
+      case 'Abu Dhabi':
+        return 'أبوظبي';
+      case 'Sharjah':
+        return 'الشارقة';
+      case 'UAE':
+        return 'الإمارات';
+      default:
+        return value;
+    }
+  }
+
+  String _localizedNationalityLabel(String value) {
+    if (Directionality.of(context) != ui.TextDirection.rtl) return value;
+    switch (value.trim()) {
+      case 'Indian':
+        return 'هندي';
+      case 'Filipino':
+        return 'فلبيني';
+      case 'Pakistani':
+        return 'باكستاني';
+      case 'Lebanese':
+        return 'لبناني';
+      case 'British':
+        return 'بريطاني';
+      case 'Egyptian':
+        return 'مصري';
+      case 'Expat life':
+        return 'حياة المغتربين';
+      default:
+        return value;
+    }
+  }
+
+  String _displayLabel(String value) {
+    if (Directionality.of(context) != ui.TextDirection.rtl) return value;
+    return '\u2068${value.trim()}\u2069';
   }
 
   IconData _serviceIcon(String category) {

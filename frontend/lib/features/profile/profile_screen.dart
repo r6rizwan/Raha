@@ -7,6 +7,7 @@ import '../../core/localization/l10n.dart';
 import '../../core/localization/locale_provider.dart';
 import '../../data/repositories/auth_repository.dart';
 import '../../data/services/auth_service.dart';
+import '../../data/services/update_checker_service.dart';
 import '../../shared/widgets/raha_card.dart';
 import '../../shared/widgets/raha_loading_widget.dart';
 import 'bookings_notifier.dart';
@@ -244,6 +245,9 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
 
   Widget _buildSettingsTab() {
     final l10n = context.l10n;
+    final currentLocale = ref.watch(localeProvider);
+    final isArabic = currentLocale?.languageCode == 'ar';
+
     return ListView(
       padding: const EdgeInsets.all(20),
       physics: const BouncingScrollPhysics(),
@@ -257,11 +261,11 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
               context.push('/edit-profile');
             },
           ),
-          _buildSettingsTile(
-            icon: Icons.language_rounded,
-            title: l10n.language,
-            subtitle: _languageLabel(),
-            onTap: _showLanguageSheet,
+          _buildLanguageSelectorCard(
+            isArabic: isArabic,
+            onSelectEnglish: () =>
+                ref.read(localeProvider.notifier).setEnglish(),
+            onSelectArabic: () => ref.read(localeProvider.notifier).setArabic(),
           ),
           _buildSettingsTile(
             icon: Icons.payment_rounded,
@@ -282,6 +286,13 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                 context,
               ).showSnackBar(SnackBar(content: Text(l10n.savedLocationsSoon)));
             },
+          ),
+          _buildSettingsTile(
+            icon: Icons.system_update_alt_rounded,
+            title: l10n.checkForUpdates,
+            subtitle: l10n.checkForUpdatesSubtitle,
+            onTap: () =>
+                performVersionCheck(context, ref, showUpToDateFeedback: true),
           ),
         ]),
         const SizedBox(height: 24),
@@ -305,6 +316,80 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
           ),
         ]),
       ],
+    );
+  }
+
+  Widget _buildLanguageSelectorCard({
+    required bool isArabic,
+    required VoidCallback onSelectEnglish,
+    required VoidCallback onSelectArabic,
+  }) {
+    final l10n = context.l10n;
+    return Padding(
+      padding: const EdgeInsets.all(16),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            width: 44,
+            height: 44,
+            decoration: BoxDecoration(
+              color: mintBgColor,
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: const Icon(
+              Icons.language_rounded,
+              color: primaryColor,
+              size: 22,
+            ),
+          ),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  l10n.language,
+                  style: const TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w700,
+                    color: textColor,
+                  ),
+                ),
+                const SizedBox(height: 10),
+                Container(
+                  height: 42,
+                  padding: const EdgeInsets.all(3),
+                  decoration: BoxDecoration(
+                    color: backgroundColor,
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: borderColor),
+                  ),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: _LanguageOption(
+                          label: 'English',
+                          isSelected: !isArabic,
+                          onTap: onSelectEnglish,
+                        ),
+                      ),
+                      const SizedBox(width: 4),
+                      Expanded(
+                        child: _LanguageOption(
+                          label: 'العربية',
+                          isSelected: isArabic,
+                          onTap: onSelectArabic,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -359,8 +444,10 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   Widget _buildSettingsTile({
     required IconData icon,
     required String title,
-    required String subtitle,
+    String? subtitle,
     required VoidCallback onTap,
+    bool showChevron = true,
+    Widget? trailingWidget,
     bool isDestructive = false,
   }) {
     final color = isDestructive ? Colors.redAccent : textColor;
@@ -399,20 +486,28 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                       ),
                     ),
                     const SizedBox(height: 3),
-                    Text(
-                      subtitle,
-                      style: const TextStyle(fontSize: 12, color: mutedColor),
-                    ),
+                    if (subtitle != null && subtitle.isNotEmpty) ...[
+                      const SizedBox(height: 3),
+                      Text(
+                        subtitle,
+                        style: const TextStyle(fontSize: 12, color: mutedColor),
+                      ),
+                    ],
                   ],
                 ),
               ),
-              Icon(
-                Icons.arrow_forward_ios_rounded,
-                size: 14,
-                color: isDestructive
-                    ? Colors.redAccent.withValues(alpha: 0.5)
-                    : mutedColor,
-              ),
+              if (trailingWidget != null) ...[
+                trailingWidget,
+                const SizedBox(width: 8),
+              ],
+              if (showChevron)
+                Icon(
+                  Icons.arrow_forward_ios_rounded,
+                  size: 14,
+                  color: isDestructive
+                      ? Colors.redAccent.withValues(alpha: 0.5)
+                      : mutedColor,
+                ),
             ],
           ),
         ),
@@ -687,45 +782,46 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
         return {'bg': const Color(0xFFF0F4F8), 'text': textColor};
     }
   }
+}
 
-  String _languageLabel() {
-    final locale = ref.watch(localeProvider);
-    final l10n = context.l10n;
-    if (locale == null) return l10n.systemDefault;
-    if (locale.languageCode == 'ar') return l10n.arabic;
-    return l10n.english;
-  }
+class _LanguageOption extends StatelessWidget {
+  const _LanguageOption({
+    required this.label,
+    required this.isSelected,
+    required this.onTap,
+  });
 
-  Future<void> _showLanguageSheet() async {
-    final l10n = context.l10n;
-    await showModalBottomSheet<void>(
-      context: context,
-      builder: (context) => SafeArea(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            ListTile(
-              title: Text(l10n.systemDefault),
-              onTap: () async {
-                await ref.read(localeProvider.notifier).useSystem();
-                if (context.mounted) Navigator.pop(context);
-              },
+  final String label;
+  final bool isSelected;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(10),
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 180),
+          curve: Curves.easeOut,
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            color: isSelected
+                ? _ProfileScreenState.primaryColor
+                : Colors.transparent,
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Text(
+            label,
+            style: TextStyle(
+              fontSize: 13,
+              fontWeight: FontWeight.w800,
+              color: isSelected
+                  ? _ProfileScreenState.whiteTextColor
+                  : _ProfileScreenState.mutedColor,
             ),
-            ListTile(
-              title: Text(l10n.english),
-              onTap: () async {
-                await ref.read(localeProvider.notifier).setEnglish();
-                if (context.mounted) Navigator.pop(context);
-              },
-            ),
-            ListTile(
-              title: Text(l10n.arabic),
-              onTap: () async {
-                await ref.read(localeProvider.notifier).setArabic();
-                if (context.mounted) Navigator.pop(context);
-              },
-            ),
-          ],
+          ),
         ),
       ),
     );

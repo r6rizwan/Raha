@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../core/errors/failures.dart';
 import '../../core/localization/l10n.dart';
 import '../../core/theme/app_theme.dart';
 import '../../data/models/food_place_details_model.dart';
+import '../../data/models/food_spot_model.dart';
 import '../../data/models/food_spot_details_model.dart';
 import '../../data/repositories/food_repository.dart';
 import '../../shared/widgets/raha_error_widget.dart';
-import '../../shared/widgets/raha_loading_widget.dart';
 
 final foodDetailProvider = FutureProvider.family<FoodSpotDetailsModel, String>((
   ref,
@@ -45,7 +46,7 @@ class FoodDetailScreen extends ConsumerWidget {
       body: ref
           .watch(provider)
           .when(
-            loading: () => const RahaLoadingWidget(),
+            loading: () => const _FoodDetailLoadingSkeleton(),
             error: (e, _) => RahaErrorWidget(
               message: e is Failure
                   ? e.message
@@ -57,6 +58,7 @@ class FoodDetailScreen extends ConsumerWidget {
               final place = details.place;
               final placeRating = place?.rating ?? 0;
               final displayRating = placeRating > 0 ? placeRating : spot.rating;
+              final titleParts = _splitTitle(spot.name);
               final heroPhoto = _heroPhoto(
                 spot.photos,
                 place?.photoNames ?? const [],
@@ -139,15 +141,26 @@ class FoodDetailScreen extends ConsumerWidget {
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        spot.name,
+                                        titleParts.$1,
                                         style: const TextStyle(
-                                          fontSize: 26,
+                                          fontSize: 22,
                                           fontWeight: FontWeight.w900,
                                           color: textColor,
-                                          letterSpacing: -0.8,
-                                          height: 1.05,
+                                          letterSpacing: -0.6,
+                                          height: 1.08,
                                         ),
                                       ),
+                                      if (titleParts.$2 != null) ...[
+                                        const SizedBox(height: 6),
+                                        Text(
+                                          titleParts.$2!,
+                                          style: const TextStyle(
+                                            fontSize: 14,
+                                            color: primaryColor,
+                                            fontWeight: FontWeight.w800,
+                                          ),
+                                        ),
+                                      ],
                                       const SizedBox(height: 8),
                                       Row(
                                         children: [
@@ -159,7 +172,7 @@ class FoodDetailScreen extends ConsumerWidget {
                                           const SizedBox(width: 5),
                                           Expanded(
                                             child: Text(
-                                              '${spot.districtTag}, ${spot.city}',
+                                              _locationSummary(spot, place),
                                               style: const TextStyle(
                                                 fontSize: 13,
                                                 color: mutedColor,
@@ -176,6 +189,18 @@ class FoodDetailScreen extends ConsumerWidget {
                                 _LiveBadge(isLive: place != null),
                               ],
                             ),
+                            const SizedBox(height: 12),
+                            if (place != null && place.userRatingCount > 0)
+                              Text(
+                                '${place.userRatingCount} ${l10n.reviewsCount(place.userRatingCount).replaceFirst('${place.userRatingCount} ', '')}',
+                                style: const TextStyle(
+                                  fontSize: 12,
+                                  color: mutedColor,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            const SizedBox(height: 18),
+                            _ActionGrid(place: place),
                             const SizedBox(height: 18),
                             Wrap(
                               spacing: 8,
@@ -203,17 +228,8 @@ class FoodDetailScreen extends ConsumerWidget {
                                     color: goldColor,
                                     bgColor: AppColors.warmBg,
                                   ),
-                                if (place != null && place.userRatingCount > 0)
-                                  _InfoChip(
-                                    icon: Icons.rate_review_outlined,
-                                    label: l10n.reviewsCount(place.userRatingCount),
-                                    color: AppColors.violet,
-                                    bgColor: AppColors.violetBg,
-                                  ),
                               ],
                             ),
-                            const SizedBox(height: 22),
-                            _ActionGrid(place: place),
                             const SizedBox(height: 26),
                             _SectionTitle(l10n.details),
                             const SizedBox(height: 12),
@@ -222,7 +238,9 @@ class FoodDetailScreen extends ConsumerWidget {
                               const SizedBox(height: 26),
                               _SectionTitle(l10n.openingHours),
                               const SizedBox(height: 12),
-                              _ExpandableHoursCard(openingHours: place!.openingHours),
+                              _ExpandableHoursCard(
+                                openingHours: place!.openingHours,
+                              ),
                             ],
                             if (place == null) ...[
                               const SizedBox(height: 18),
@@ -245,6 +263,233 @@ class FoodDetailScreen extends ConsumerWidget {
     if (spotPhotos.isNotEmpty) return spotPhotos.first;
     return null;
   }
+
+  (String, String?) _splitTitle(String rawName) {
+    final parts = rawName.split(' - ');
+    if (parts.length < 2) return (rawName, null);
+    return (parts.first.trim(), parts.sublist(1).join(' - ').trim());
+  }
+
+  String _locationSummary(FoodSpotModel spot, FoodPlaceDetailsModel? place) {
+    if (place?.address.isNotEmpty == true) {
+      final shortAddress = place!.address
+          .split(' - ')
+          .take(2)
+          .join(' - ')
+          .trim();
+      if (shortAddress.isNotEmpty) return shortAddress;
+    }
+    return '${spot.districtTag}, ${spot.city}';
+  }
+}
+
+class _FoodDetailLoadingSkeleton extends StatelessWidget {
+  const _FoodDetailLoadingSkeleton();
+
+  static const Color primaryColor = AppColors.primary;
+  static const Color backgroundColor = AppColors.background;
+  static const Color cardColor = AppColors.card;
+  static const Color shimmerBase = Color(0xFFE5DDD2);
+  static const Color shimmerHighlight = Color(0xFFF8F3EB);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: primaryColor,
+      body: CustomScrollView(
+        physics: const NeverScrollableScrollPhysics(),
+        slivers: [
+          SliverAppBar(
+            expandedHeight: 250,
+            pinned: true,
+            stretch: true,
+            elevation: 0,
+            backgroundColor: primaryColor,
+            leading: Padding(
+              padding: const EdgeInsets.only(left: 12, top: 8, bottom: 8),
+              child: Container(
+                decoration: const BoxDecoration(
+                  color: Color(0x3D000000),
+                  shape: BoxShape.circle,
+                ),
+              ),
+            ),
+            flexibleSpace: FlexibleSpaceBar(
+              background: Shimmer.fromColors(
+                baseColor: shimmerBase,
+                highlightColor: shimmerHighlight,
+                child: Container(color: Colors.white),
+              ),
+            ),
+          ),
+          SliverToBoxAdapter(
+            child: Container(
+              decoration: const BoxDecoration(
+                color: backgroundColor,
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(28),
+                  topRight: Radius.circular(28),
+                ),
+              ),
+              child: Shimmer.fromColors(
+                baseColor: shimmerBase,
+                highlightColor: shimmerHighlight,
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 20, 20, 28),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _block(width: 220, height: 28, radius: 8),
+                      const SizedBox(height: 10),
+                      _block(width: 170, height: 14, radius: 6),
+                      const SizedBox(height: 18),
+                      Wrap(
+                        spacing: 8,
+                        runSpacing: 8,
+                        children: const [
+                          _Pill(width: 92),
+                          _Pill(width: 148),
+                          _Pill(width: 72),
+                        ],
+                      ),
+                      const SizedBox(height: 22),
+                      Row(
+                        children: const [
+                          Expanded(child: _ActionCard()),
+                          SizedBox(width: 12),
+                          Expanded(child: _ActionCard()),
+                        ],
+                      ),
+                      const SizedBox(height: 26),
+                      _block(width: 84, height: 18, radius: 6),
+                      const SizedBox(height: 12),
+                      _card(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            _block(
+                              width: double.infinity,
+                              height: 14,
+                              radius: 6,
+                            ),
+                            SizedBox(height: 10),
+                            _block(width: 210, height: 14, radius: 6),
+                            SizedBox(height: 18),
+                            _block(width: 110, height: 16, radius: 6),
+                            SizedBox(height: 10),
+                            _block(
+                              width: double.infinity,
+                              height: 14,
+                              radius: 6,
+                            ),
+                            SizedBox(height: 8),
+                            _block(width: 240, height: 14, radius: 6),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 26),
+                      _block(width: 132, height: 18, radius: 6),
+                      const SizedBox(height: 12),
+                      _card(
+                        child: Column(
+                          children: const [
+                            _HourLine(),
+                            SizedBox(height: 12),
+                            _HourLine(),
+                            SizedBox(height: 12),
+                            _HourLine(),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  static Widget _card({required Widget child}) => Container(
+    width: double.infinity,
+    padding: const EdgeInsets.all(16),
+    decoration: BoxDecoration(
+      color: cardColor,
+      borderRadius: BorderRadius.circular(20),
+    ),
+    child: child,
+  );
+
+  static Widget _block({
+    required double width,
+    required double height,
+    required double radius,
+  }) => Container(
+    width: width,
+    height: height,
+    decoration: BoxDecoration(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(radius),
+    ),
+  );
+}
+
+class _Pill extends StatelessWidget {
+  const _Pill({required this.width});
+  final double width;
+
+  @override
+  Widget build(BuildContext context) => Container(
+    width: width,
+    height: 34,
+    decoration: BoxDecoration(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(18),
+    ),
+  );
+}
+
+class _ActionCard extends StatelessWidget {
+  const _ActionCard();
+
+  @override
+  Widget build(BuildContext context) => Container(
+    height: 74,
+    decoration: BoxDecoration(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(18),
+    ),
+  );
+}
+
+class _HourLine extends StatelessWidget {
+  const _HourLine();
+
+  @override
+  Widget build(BuildContext context) => Row(
+    children: [
+      Expanded(
+        child: Container(
+          height: 14,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(6),
+          ),
+        ),
+      ),
+      const SizedBox(width: 16),
+      Container(
+        width: 72,
+        height: 14,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(6),
+        ),
+      ),
+    ],
+  );
 }
 
 class _GlassIconButton extends StatelessWidget {
@@ -560,13 +805,15 @@ class _ExpandableHoursCardState extends State<_ExpandableHoursCard> {
   @override
   Widget build(BuildContext context) {
     if (widget.openingHours.isEmpty) return const SizedBox.shrink();
-    
+
     final todayTiming = _getTodayTiming();
     int colonIdx = todayTiming.indexOf(': ');
     final todayDay = colonIdx != -1
         ? todayTiming.substring(0, colonIdx)
         : context.l10n.todayLabel;
-    final todayHours = colonIdx != -1 ? todayTiming.substring(colonIdx + 2) : todayTiming;
+    final todayHours = colonIdx != -1
+        ? todayTiming.substring(colonIdx + 2)
+        : todayTiming;
 
     return AnimatedContainer(
       duration: const Duration(milliseconds: 300),
@@ -622,7 +869,9 @@ class _ExpandableHoursCardState extends State<_ExpandableHoursCard> {
                       ),
                     ),
                     Icon(
-                      _isExpanded ? Icons.expand_less_rounded : Icons.expand_more_rounded,
+                      _isExpanded
+                          ? Icons.expand_less_rounded
+                          : Icons.expand_more_rounded,
                       color: FoodDetailScreen.mutedColor,
                     ),
                   ],
@@ -649,9 +898,13 @@ class _ExpandableHoursCardState extends State<_ExpandableHoursCard> {
                                 child: Text(
                                   day,
                                   style: TextStyle(
-                                    color: isToday ? FoodDetailScreen.primaryColor : FoodDetailScreen.mutedColor,
+                                    color: isToday
+                                        ? FoodDetailScreen.primaryColor
+                                        : FoodDetailScreen.mutedColor,
                                     fontSize: 13,
-                                    fontWeight: isToday ? FontWeight.w800 : FontWeight.w600,
+                                    fontWeight: isToday
+                                        ? FontWeight.w800
+                                        : FontWeight.w600,
                                   ),
                                 ),
                               ),
@@ -660,9 +913,13 @@ class _ExpandableHoursCardState extends State<_ExpandableHoursCard> {
                                 child: Text(
                                   hours,
                                   style: TextStyle(
-                                    color: isToday ? FoodDetailScreen.textColor : FoodDetailScreen.mutedColor,
+                                    color: isToday
+                                        ? FoodDetailScreen.textColor
+                                        : FoodDetailScreen.mutedColor,
                                     fontSize: 13,
-                                    fontWeight: isToday ? FontWeight.w700 : FontWeight.w600,
+                                    fontWeight: isToday
+                                        ? FontWeight.w700
+                                        : FontWeight.w600,
                                   ),
                                   textAlign: TextAlign.right,
                                 ),

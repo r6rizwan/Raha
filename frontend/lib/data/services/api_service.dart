@@ -1,8 +1,10 @@
 import 'package:dio/dio.dart';
+import 'dart:ui';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/constants/app_constants.dart';
 import '../../core/errors/failures.dart';
+import '../../core/localization/locale_provider.dart';
 
 final apiServiceProvider = Provider<ApiService>((ref) => ApiService(ref));
 const _baseUrl = String.fromEnvironment(
@@ -29,6 +31,11 @@ class ApiService {
           if (options.path == '/health' || options.path == '/api/health') {
             return handler.next(options);
           }
+          final locale = ref.read(localeProvider);
+          final lang = _normalizedLang(
+            locale?.languageCode ?? PlatformDispatcher.instance.locale.languageCode,
+          );
+          options.headers['Accept-Language'] = lang;
           final token = await FirebaseAuth.instance.currentUser?.getIdToken();
           if (token == null) {
             return handler.reject(
@@ -70,6 +77,9 @@ class ApiService {
   final Ref ref;
   late final Dio dio;
 }
+
+String _normalizedLang(String code) =>
+    code.toLowerCase().startsWith('ar') ? 'ar' : 'en';
 
 Failure failureFromDio(DioException e) {
   if (e.type == DioExceptionType.cancel) {

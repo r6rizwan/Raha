@@ -13,10 +13,12 @@ Flutter mobile app for Raha. It helps expats discover home-style food, book serv
 - Service booking flow with booking history and cancellation
 - Edit profile screen for name, city, neighbourhood, and nationality
 - App update checker backed by the backend `/health` endpoint
+- Manual `Check for Updates` action in Profile
 - Branded splash screen and launcher icons
 - Offline support with cached read fallback in Flutter repositories
 - Arabic and English support with locale switching
 - RTL support for Arabic
+- Portrait-only mobile experience
 
 ## Stack
 
@@ -115,6 +117,10 @@ flutter run \
   --dart-define=GOOGLE_WEB_CLIENT_ID=your_web_client_id.apps.googleusercontent.com
 ```
 
+iOS note:
+
+- Ensure `ios/Runner/GoogleService-Info.plist` is added to the `Runner` target in Xcode so Firebase initializes correctly on iPhone and iOS Simulator.
+
 Release example:
 
 ```sh
@@ -146,7 +152,9 @@ flutter test
 ## Notes
 
 - The app expects the backend `/health` endpoint to return `minAppVersion`, `latestAppVersion`, and `updateUrl`.
+- The app checks for updates automatically on Home and also exposes a manual `Check for Updates` action in Profile.
 - The repo also exposes `/api/health` for the backend keep-warm GitHub Action.
 - Food detail images come from backend proxy URLs, so the mobile app never receives the raw Google Places server key.
 - Native splash and launcher icons are configured through `flutter_native_splash` and `flutter_launcher_icons`.
 - Production builds should use an HTTPS backend URL.
+- iOS is configured for portrait mode and now bundles Firebase configuration through `GoogleService-Info.plist`.

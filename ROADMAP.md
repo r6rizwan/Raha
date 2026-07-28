@@ -15,10 +15,15 @@ Raha should become the go-to mobile companion for expat professionals in the UAE
 - Home services listing, booking, and booking history
 - Offline read fallback for core user flows
 - App update checker backed by the backend `/health` endpoint
-- **Arabic localization and full RTL layout support** ✓
+- Manual in-app `Check for Updates` flow wired to GitHub Releases
+- Arabic localization and RTL support for the main app experience
 - **Language preference persistence across app restarts** ✓
 - **Arabic AI recommendations — Gemini prompts dynamically switch language** ✓
 - Localized Arabic fallback recommendation cards ✓
+- Arabic Home screen polish for mixed-language content, localized service labels, and improved RTL presentation
+- Portrait-only app behavior across Flutter and iOS configuration
+- iOS Firebase client setup integrated into the Xcode project bundle
+- iOS status bar visibility restored and landscape support removed
 
 ## Now
 
@@ -34,8 +39,8 @@ Raha should become the go-to mobile companion for expat professionals in the UAE
 - Booking reschedule and cancellation improvements
 - Push notifications for booking updates and reminders
 - Better provider detail pages with service scope, pricing clarity, and trust signals
-- More city-aware content for Dubai, Abu Dhabi, Riyadh, and Jeddah
-- Expand cuisine discovery beyond current seeded and synced categories
+- More city-aware UAE content for Dubai, Abu Dhabi, Sharjah, and nearby areas
+- Expand cuisine discovery beyond the current live Places import coverage and category mapping
 - Add deeper search for restaurants, cuisines, and neighbourhoods
 
 ## Later
@@ -46,6 +51,7 @@ Raha should become the go-to mobile companion for expat professionals in the UAE
 - Referral and loyalty programs
 - Personalized weekly digest of recommendations and local tips
 - Employer or community partnerships for expat onboarding bundles
+- Regional expansion beyond the UAE, including Saudi cities such as Riyadh and Jeddah
 
 ## AI Roadmap
 
@@ -54,11 +60,11 @@ Raha should become the go-to mobile companion for expat professionals in the UAE
 - Add behavior-based personalization from bookings, searches, and views
 - Explain recommendations in clearer end-user language
 - Add recommendation diversity so food, services, and tips feel balanced
-- Reduce Gemini dependency risk with better fallbacks and caching
+- Reduce Gemini dependency risk with better fallbacks, caching, and quota-aware degradation
 
 ## Data and Integrations
 
-- Improve Google Places ingestion and refresh cadence
+- Improve Google Places ingestion freshness, deduplication, and refresh cadence
 - Add provider onboarding and internal admin tooling
 - Add maps, directions, and location-aware ranking
 - Add payment integration for booking deposits or full checkout
@@ -80,8 +86,10 @@ Raha should become the go-to mobile companion for expat professionals in the UAE
 
 ## Release and Ops
 
-- Automate signed APK release builds end-to-end
+- Formalize the local signed APK release process and decide when to restore GitHub release automation
+- Add iOS release build and distribution workflow
 - Prepare Play Store release assets and production checklist
+- Prepare App Store release assets and iOS deployment checklist
 - Separate staging and production environments cleanly
 - Formalize app versioning and update rollout policy
 

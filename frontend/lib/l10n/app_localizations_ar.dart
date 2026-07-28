@@ -118,6 +118,15 @@ class AppLocalizationsAr extends AppLocalizations {
   String get friend => 'صديقي';
 
   @override
+  String get exploreAction => 'استكشف';
+
+  @override
+  String get bookNowAction => 'احجز الآن';
+
+  @override
+  String get readMoreAction => 'اقرأ المزيد';
+
+  @override
   String hiName(String name) {
     return 'مرحباً، $name';
   }
@@ -132,6 +141,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String heroDefaultSubtitle(String area) {
     return 'طعام وخدمات ومساعدة محلية مختارة بعناية حول $area.';
   }
+
+  @override
+  String get builtAroundPreferences => 'مبني حول تفضيلاتك.';
 
   @override
   String get quickActions => 'إجراءات سريعة';
@@ -189,6 +201,18 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get bookServiceFastSubtitle => 'فئات شائعة للحياة اليومية في الإمارات';
+
+  @override
+  String get cleaningCategory => 'تنظيف';
+
+  @override
+  String get maintenanceCategory => 'صيانة';
+
+  @override
+  String get moversCategory => 'نقل';
+
+  @override
+  String get handymanCategory => 'فني أعمال';
 
   @override
   String get browseProviders => 'تصفح المزوّدين';
@@ -323,6 +347,36 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get helpSupportSoon => 'المساعدة والدعم قريباً!';
+
+  @override
+  String get checkForUpdates => 'التحقق من التحديثات';
+
+  @override
+  String get checkForUpdatesSubtitle =>
+      'اعرف ما إذا كان هناك إصدار أحدث من راحة';
+
+  @override
+  String get updateRequired => 'التحديث مطلوب';
+
+  @override
+  String get updateRequiredMessage =>
+      'يتوفر تحديث مهم. يرجى تحديث التطبيق لمتابعة استخدام راحة.';
+
+  @override
+  String get newUpdateAvailable => 'يتوفر تحديث جديد';
+
+  @override
+  String get newUpdateAvailableMessage =>
+      'يتوفر إصدار جديد من راحة مع تحسينات وإصلاحات. هل تريد التحديث الآن؟';
+
+  @override
+  String get updateNow => 'حدّث الآن';
+
+  @override
+  String get later => 'لاحقاً';
+
+  @override
+  String get appUpToDate => 'أنت تستخدم بالفعل أحدث إصدار من راحة.';
 
   @override
   String get logOut => 'تسجيل الخروج';

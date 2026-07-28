@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../../core/localization/l10n.dart';
 import '../services/api_service.dart';
 
 class AppVersionMetadata {
@@ -61,10 +63,17 @@ int compareVersion(String v1, String v2) {
   return 0;
 }
 
-void performVersionCheck(BuildContext context, WidgetRef ref, String currentVersion) async {
+Future<void> performVersionCheck(
+  BuildContext context,
+  WidgetRef ref, {
+  bool showUpToDateFeedback = false,
+}) async {
   final checkService = ref.read(updateCheckerProvider);
   final meta = await checkService.checkVersion();
+  final packageInfo = await PackageInfo.fromPlatform();
+  final currentVersion = packageInfo.version;
   if (meta == null || !context.mounted) return;
+  final l10n = context.l10n;
 
   final needsForceUpdate = compareVersion(meta.minAppVersion, currentVersion) > 0;
   final hasNewUpdate = compareVersion(meta.latestAppVersion, currentVersion) > 0;
@@ -78,9 +87,12 @@ void performVersionCheck(BuildContext context, WidgetRef ref, String currentVers
         canPop: false,
         child: AlertDialog(
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-          title: const Text('Update Required', style: TextStyle(fontWeight: FontWeight.bold)),
-          content: const Text(
-            'A critical update is available. Please update the app to continue using Raha.',
+          title: Text(
+            l10n.updateRequired,
+            style: const TextStyle(fontWeight: FontWeight.bold),
+          ),
+          content: Text(
+            l10n.updateRequiredMessage,
           ),
           actions: [
             TextButton(
@@ -90,7 +102,13 @@ void performVersionCheck(BuildContext context, WidgetRef ref, String currentVers
                   await launchUrl(uri, mode: LaunchMode.externalApplication);
                 }
               },
-              child: const Text('Update Now', style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF0A5D4B))),
+              child: Text(
+                l10n.updateNow,
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF0A5D4B),
+                ),
+              ),
             ),
           ],
         ),
@@ -102,14 +120,17 @@ void performVersionCheck(BuildContext context, WidgetRef ref, String currentVers
       context: context,
       builder: (context) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: const Text('New Update Available', style: TextStyle(fontWeight: FontWeight.bold)),
-        content: const Text(
-          'A new version of Raha is available with improvements and fixes. Would you like to update now?',
+        title: Text(
+          l10n.newUpdateAvailable,
+          style: const TextStyle(fontWeight: FontWeight.bold),
+        ),
+        content: Text(
+          l10n.newUpdateAvailableMessage,
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Later', style: TextStyle(color: Colors.grey)),
+            child: Text(l10n.later, style: const TextStyle(color: Colors.grey)),
           ),
           TextButton(
             onPressed: () async {
@@ -119,10 +140,20 @@ void performVersionCheck(BuildContext context, WidgetRef ref, String currentVers
                 await launchUrl(uri, mode: LaunchMode.externalApplication);
               }
             },
-            child: const Text('Update Now', style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF0A5D4B))),
+            child: Text(
+              l10n.updateNow,
+              style: const TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF0A5D4B),
+              ),
+            ),
           ),
         ],
       ),
     );
+  } else if (showUpToDateFeedback && context.mounted) {
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(l10n.appUpToDate)));
   }
 }

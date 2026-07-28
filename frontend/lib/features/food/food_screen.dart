@@ -80,14 +80,6 @@ class _FoodScreenState extends ConsumerState<FoodScreen> {
                       ),
                     ],
                   ),
-                  // IconButton(
-                  //   onPressed: () => context.pop(),
-                  //   icon: const Icon(
-                  //     Icons.arrow_back_ios_new_rounded,
-                  //     color: Colors.white,
-                  //     size: 18,
-                  //   ),
-                  // ),
                 ],
               ),
             ),

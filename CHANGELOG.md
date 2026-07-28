@@ -2,12 +2,24 @@
 
 All notable changes to Raha should be documented in this file.
 
+## v1.1.1
+
+- Added a manual `Check for Updates` action in Profile and switched update detection to the installed app version instead of a hardcoded value
+- Localized AI recommendation requests and CTA labels for Arabic, with better mixed Arabic-English card rendering on Home
+- Localized Home service category labels in Arabic mode
+- Reworked language selection in Profile into a dedicated two-option English/Arabic selector
+- Fixed RTL and mixed-language layout issues across localized screens
+- Locked the app to portrait mode and aligned iOS orientation support with the Flutter app restriction
+- Fixed iOS Firebase setup by adding `GoogleService-Info.plist` to the Xcode project resources
+- Restored the iOS status bar visibility and removed landscape orientations from the iOS app configuration
+- Fixed iOS project setup issues affecting app startup on simulator and device
+
 ## v1.1.0
 
-- Added full Arabic translation and Right-to-Left (RTL) layout support across all app screens
-- Implemented robust language preference persistence using SharedPreferences to prevent resets on app restarts
-- Integrated dynamic Arabic translation support in backend Gemini AI recommendation prompts
-- Added Arabic localized fallback recommendation cards for offline/failed AI requests
+- Added Arabic translation and Right-to-Left (RTL) support across the main app flows and shared UI
+- Implemented persisted language preference selection using SharedPreferences
+- Integrated Arabic-aware backend Gemini recommendation prompts
+- Added Arabic localized fallback recommendation cards for AI failures
 - Updated default production API endpoint to point directly to live Render server
 - Cleaned up redundant configurations and dead env code
 

@@ -3,7 +3,7 @@ const { getRecommendations, FALLBACK_EN, FALLBACK_AR } = require('../utils/gemin
 
 exports.recommendations = async (req, res, next) => {
   try {
-    const lang = req.query.lang || 'en';
+    const lang = resolveLang(req);
     const user = await User.findOne({ firebaseUid: req.params.userId }).select('-__v');
     const fallback = lang === 'ar' ? FALLBACK_AR : FALLBACK_EN;
     
@@ -18,3 +18,13 @@ exports.recommendations = async (req, res, next) => {
     res.json({ success: true, data });
   } catch (err) { next(err); }
 };
+
+function resolveLang(req) {
+  const raw =
+    req.query.lang ||
+    req.headers['accept-language'] ||
+    req.headers['x-language'] ||
+    'en';
+
+  return String(raw).toLowerCase().startsWith('ar') ? 'ar' : 'en';
+}

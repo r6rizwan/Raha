@@ -119,6 +119,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get friend => 'there';
 
   @override
+  String get exploreAction => 'Explore';
+
+  @override
+  String get bookNowAction => 'Book Now';
+
+  @override
+  String get readMoreAction => 'Read More';
+
+  @override
   String hiName(String name) {
     return 'Hi, $name';
   }
@@ -133,6 +142,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String heroDefaultSubtitle(String area) {
     return 'Food, services, and local help curated around $area.';
   }
+
+  @override
+  String get builtAroundPreferences => 'Built around your preferences.';
 
   @override
   String get quickActions => 'Quick actions';
@@ -192,6 +204,18 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get bookServiceFastSubtitle =>
       'Popular categories for busy UAE city life';
+
+  @override
+  String get cleaningCategory => 'Cleaning';
+
+  @override
+  String get maintenanceCategory => 'Maintenance';
+
+  @override
+  String get moversCategory => 'Movers';
+
+  @override
+  String get handymanCategory => 'Handyman';
 
   @override
   String get browseProviders => 'Browse providers';
@@ -329,6 +353,36 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get helpSupportSoon => 'Help & Support coming soon!';
+
+  @override
+  String get checkForUpdates => 'Check for Updates';
+
+  @override
+  String get checkForUpdatesSubtitle =>
+      'See whether a newer version of Raha is available';
+
+  @override
+  String get updateRequired => 'Update Required';
+
+  @override
+  String get updateRequiredMessage =>
+      'A critical update is available. Please update the app to continue using Raha.';
+
+  @override
+  String get newUpdateAvailable => 'New Update Available';
+
+  @override
+  String get newUpdateAvailableMessage =>
+      'A new version of Raha is available with improvements and fixes. Would you like to update now?';
+
+  @override
+  String get updateNow => 'Update Now';
+
+  @override
+  String get later => 'Later';
+
+  @override
+  String get appUpToDate => 'You\'re already using the latest version of Raha.';
 
   @override
   String get logOut => 'Log Out';

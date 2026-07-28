@@ -314,6 +314,24 @@ abstract class AppLocalizations {
   /// **'there'**
   String get friend;
 
+  /// No description provided for @exploreAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Explore'**
+  String get exploreAction;
+
+  /// No description provided for @bookNowAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Book Now'**
+  String get bookNowAction;
+
+  /// No description provided for @readMoreAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Read More'**
+  String get readMoreAction;
+
   /// No description provided for @hiName.
   ///
   /// In en, this message translates to:
@@ -337,6 +355,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Food, services, and local help curated around {area}.'**
   String heroDefaultSubtitle(String area);
+
+  /// No description provided for @builtAroundPreferences.
+  ///
+  /// In en, this message translates to:
+  /// **'Built around your preferences.'**
+  String get builtAroundPreferences;
 
   /// No description provided for @quickActions.
   ///
@@ -439,6 +463,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Popular categories for busy UAE city life'**
   String get bookServiceFastSubtitle;
+
+  /// No description provided for @cleaningCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'Cleaning'**
+  String get cleaningCategory;
+
+  /// No description provided for @maintenanceCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'Maintenance'**
+  String get maintenanceCategory;
+
+  /// No description provided for @moversCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'Movers'**
+  String get moversCategory;
+
+  /// No description provided for @handymanCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'Handyman'**
+  String get handymanCategory;
 
   /// No description provided for @browseProviders.
   ///
@@ -703,6 +751,60 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Help & Support coming soon!'**
   String get helpSupportSoon;
+
+  /// No description provided for @checkForUpdates.
+  ///
+  /// In en, this message translates to:
+  /// **'Check for Updates'**
+  String get checkForUpdates;
+
+  /// No description provided for @checkForUpdatesSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'See whether a newer version of Raha is available'**
+  String get checkForUpdatesSubtitle;
+
+  /// No description provided for @updateRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Update Required'**
+  String get updateRequired;
+
+  /// No description provided for @updateRequiredMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'A critical update is available. Please update the app to continue using Raha.'**
+  String get updateRequiredMessage;
+
+  /// No description provided for @newUpdateAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'New Update Available'**
+  String get newUpdateAvailable;
+
+  /// No description provided for @newUpdateAvailableMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'A new version of Raha is available with improvements and fixes. Would you like to update now?'**
+  String get newUpdateAvailableMessage;
+
+  /// No description provided for @updateNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Update Now'**
+  String get updateNow;
+
+  /// No description provided for @later.
+  ///
+  /// In en, this message translates to:
+  /// **'Later'**
+  String get later;
+
+  /// No description provided for @appUpToDate.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'re already using the latest version of Raha.'**
+  String get appUpToDate;
 
   /// No description provided for @logOut.
   ///
