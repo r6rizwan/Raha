@@ -17,7 +17,9 @@ class BookingModel {
     userId: _idOf(json['userId']),
     providerId: _idOf(json['providerId']),
     providerName: json['providerName'] ?? '',
-    scheduledAt: DateTime.tryParse(json['scheduledAt'] ?? '') ?? DateTime.now(),
+    scheduledAt:
+        (DateTime.tryParse(json['scheduledAt'] ?? '') ?? DateTime.now())
+            .toLocal(),
     status: json['status'] ?? 'pending',
     notes: json['notes'] ?? '',
     amount: (json['amount'] ?? 0).toDouble(),
@@ -29,7 +31,7 @@ class BookingModel {
     'userId': userId,
     'providerId': providerId,
     'providerName': providerName,
-    'scheduledAt': scheduledAt.toIso8601String(),
+    'scheduledAt': scheduledAt.toUtc().toIso8601String(),
     'status': status,
     'notes': notes,
     'amount': amount,

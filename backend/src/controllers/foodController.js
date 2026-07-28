@@ -7,6 +7,32 @@ function foodQuery(req) {
   return query;
 }
 
+function proxyPhotoUrl(req, photoName) {
+  const host = req.get('host');
+  const protocol = req.get('x-forwarded-proto') || req.protocol;
+  return `${protocol}://${host}/api/food/photo?name=${encodeURIComponent(photoName)}`;
+}
+
+function serializeSpot(req, spotDoc) {
+  const spot = spotDoc.toObject();
+  const rawPhotos = Array.isArray(spot.rawGooglePlace?.photos)
+    ? spot.rawGooglePlace.photos
+    : [];
+  const proxyPhotos = rawPhotos
+    .map((photo) => photo?.name)
+    .filter(Boolean)
+    .slice(0, 3)
+    .map((photoName) => proxyPhotoUrl(req, photoName));
+
+  if (proxyPhotos.length > 0) {
+    spot.photos = proxyPhotos;
+  }
+
+  delete spot.rawGooglePlace;
+  delete spot.__v;
+  return spot;
+}
+
 exports.listFood = async (req, res, next) => {
   try {
     const page = Math.max(Number(req.query.page || 1), 1);
@@ -16,10 +42,13 @@ exports.listFood = async (req, res, next) => {
     const liveTotal = await FoodSpot.countDocuments(liveQuery);
     const query = liveTotal > 0 ? liveQuery : baseQuery;
     const [spots, total] = await Promise.all([
-      FoodSpot.find(query).select('-__v -rawGooglePlace').sort({ source: 1, rating: -1 }).skip((page - 1) * limit).limit(limit),
+      FoodSpot.find(query).sort({ source: 1, rating: -1 }).skip((page - 1) * limit).limit(limit),
       FoodSpot.countDocuments(query),
     ]);
-    res.json({ success: true, data: { spots, total, page } });
+    res.json({
+      success: true,
+      data: { spots: spots.map((spot) => serializeSpot(req, spot)), total, page },
+    });
   } catch (err) {
     next(err);
   }

@@ -2,6 +2,12 @@
 
 All notable changes to Raha should be documented in this file.
 
+## v1.1.2
+
+- Fixed Food screen thumbnails for Google Places-backed restaurants by routing list images through the backend photo proxy
+- Fixed delayed duplicate booking validation messages by moving missing date/time feedback inline inside the booking sheet
+- Fixed service booking times showing incorrectly in Profile by normalizing booking timestamps between device local time and stored UTC time
+
 ## v1.1.1
 
 - Added a manual `Check for Updates` action in Profile and switched update detection to the installed app version instead of a hardcoded value

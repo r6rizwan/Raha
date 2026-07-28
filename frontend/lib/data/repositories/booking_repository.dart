@@ -30,7 +30,7 @@ class BookingRepository {
         '/api/bookings',
         data: {
           'providerId': providerId,
-          'scheduledAt': scheduledAt.toIso8601String(),
+          'scheduledAt': scheduledAt.toUtc().toIso8601String(),
           'notes': notes,
           'amount': amount,
         },

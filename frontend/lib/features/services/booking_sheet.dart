@@ -29,6 +29,7 @@ class _BookingSheetState extends ConsumerState<BookingSheet> {
   DateTime? scheduledAt;
   final notes = TextEditingController();
   bool loading = false;
+  bool showScheduleError = false;
 
   @override
   void dispose() {
@@ -165,15 +166,16 @@ class _BookingSheetState extends ConsumerState<BookingSheet> {
                 },
               );
               if (time != null) {
-                setState(
-                  () => scheduledAt = DateTime(
+                setState(() {
+                  scheduledAt = DateTime(
                     date.year,
                     date.month,
                     date.day,
                     time.hour,
                     time.minute,
-                  ),
-                );
+                  );
+                  showScheduleError = false;
+                });
               }
             },
             child: Container(
@@ -181,7 +183,10 @@ class _BookingSheetState extends ConsumerState<BookingSheet> {
               decoration: BoxDecoration(
                 color: cardColor,
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: borderColor, width: 0.8),
+                border: Border.all(
+                  color: showScheduleError ? Colors.redAccent : borderColor,
+                  width: showScheduleError ? 1.1 : 0.8,
+                ),
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -219,6 +224,20 @@ class _BookingSheetState extends ConsumerState<BookingSheet> {
               ),
             ),
           ),
+          if (showScheduleError) ...[
+            const SizedBox(height: 8),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 4),
+              child: Text(
+                l10n.selectAppointmentTime,
+                style: const TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.redAccent,
+                ),
+              ),
+            ),
+          ],
           const SizedBox(height: 14),
 
           // --- INSTRUCTIONS INPUT TEXT FIELD ---
@@ -290,15 +309,13 @@ class _BookingSheetState extends ConsumerState<BookingSheet> {
               onPressed: loading
                   ? null
                   : () async {
+                      final messenger = ScaffoldMessenger.of(context);
                       if (scheduledAt == null) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(l10n.selectAppointmentTime),
-                            backgroundColor: textColor,
-                          ),
-                        );
+                        setState(() => showScheduleError = true);
                         return;
                       }
+                      setState(() => showScheduleError = false);
+                      messenger.hideCurrentSnackBar();
                       setState(() => loading = true);
                       try {
                         await ref
@@ -311,21 +328,25 @@ class _BookingSheetState extends ConsumerState<BookingSheet> {
                             );
                         if (context.mounted) {
                           Navigator.pop(context);
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(l10n.bookingRequestedSuccess),
-                              backgroundColor: primaryColor,
-                            ),
-                          );
+                          messenger
+                            ..hideCurrentSnackBar()
+                            ..showSnackBar(
+                              SnackBar(
+                                content: Text(l10n.bookingRequestedSuccess),
+                                backgroundColor: primaryColor,
+                              ),
+                            );
                         }
                       } catch (e) {
                         if (context.mounted) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(friendlyMessageForError(e)),
-                              backgroundColor: Colors.redAccent,
-                            ),
-                          );
+                          messenger
+                            ..hideCurrentSnackBar()
+                            ..showSnackBar(
+                              SnackBar(
+                                content: Text(friendlyMessageForError(e)),
+                                backgroundColor: Colors.redAccent,
+                              ),
+                            );
                         }
                       } finally {
                         if (mounted) setState(() => loading = false);
