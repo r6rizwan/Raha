@@ -21,16 +21,11 @@ GEMINI_API_KEY=
 GOOGLE_PLACES_API_KEY=
 FIREBASE_PROJECT_ID=
 GOOGLE_APPLICATION_CREDENTIALS=./serviceAccountKey.json
-MIN_APP_VERSION=1.1.1
-LATEST_APP_VERSION=1.1.1
-UPDATE_URL=https://github.com/your-org-or-user/Raha/releases
 PORT=5000
 ALLOWED_ORIGINS=http://localhost:3000,http://10.0.2.2:5000
 RATE_LIMIT_WINDOW_MS=900000
 RATE_LIMIT_MAX=100
 ```
-
-If you want the current public build to be optional rather than required, keep `MIN_APP_VERSION` lower than `LATEST_APP_VERSION`.
 
 Notes:
 
@@ -118,17 +113,7 @@ Returns:
   "success": true,
   "data": {
     "status": "ok",
-    "uptime": 123.45,
-    "minAppVersion": "1.1.1",
-    "latestAppVersion": "1.1.1",
-    "updateUrl": "https://github.com/your-org-or-user/Raha/releases"
+    "uptime": 123.45
   }
 }
 ```
-
-The health payload also carries app-update metadata used by the Flutter client:
-
-- `minAppVersion`
-- `latestAppVersion`
-- `updateUrl`
-- The frontend uses this payload for both automatic Home-screen update prompts and the manual `Check for Updates` action in Profile.

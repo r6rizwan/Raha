@@ -2,6 +2,12 @@
 
 All notable changes to Raha should be documented in this file.
 
+## v1.1.3
+
+- Switched app update checking to compare the installed app version against the latest published GitHub Release
+- Improved version parsing so release tags like `v1.1.3` are recognized correctly
+- Removed old backend-driven app update metadata from the `/health` response and related documentation
+
 ## v1.1.2
 
 - Fixed Food screen thumbnails for Google Places-backed restaurants by routing list images through the backend photo proxy

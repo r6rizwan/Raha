@@ -12,7 +12,7 @@ Flutter mobile app for Raha. It helps expats discover home-style food, book serv
 - Food detail photos served through the backend Google Places photo proxy
 - Service booking flow with booking history and cancellation
 - Edit profile screen for name, city, neighbourhood, and nationality
-- App update checker backed by the backend `/health` endpoint
+- App update checker linked to the latest published GitHub Release
 - Manual `Check for Updates` action in Profile
 - Branded splash screen and launcher icons
 - Offline support with cached read fallback in Flutter repositories
@@ -151,9 +151,8 @@ flutter test
 
 ## Notes
 
-- The app expects the backend `/health` endpoint to return `minAppVersion`, `latestAppVersion`, and `updateUrl`.
-- The app checks for updates automatically on Home and also exposes a manual `Check for Updates` action in Profile.
-- The repo also exposes `/api/health` for the backend keep-warm GitHub Action.
+- The app checks the latest published GitHub Release directly and also exposes a manual `Check for Updates` action in Profile.
+- The repo still exposes `/api/health` for backend health monitoring and the keep-warm GitHub Action.
 - Food detail images come from backend proxy URLs, so the mobile app never receives the raw Google Places server key.
 - Native splash and launcher icons are configured through `flutter_native_splash` and `flutter_launcher_icons`.
 - Production builds should use an HTTPS backend URL.
