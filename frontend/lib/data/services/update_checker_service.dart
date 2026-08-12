@@ -9,10 +9,7 @@ class AppVersionMetadata {
   final String latestAppVersion;
   final String updateUrl;
 
-  AppVersionMetadata({
-    required this.latestAppVersion,
-    required this.updateUrl,
-  });
+  AppVersionMetadata({required this.latestAppVersion, required this.updateUrl});
 
   factory AppVersionMetadata.fromJson(Map<String, dynamic> json) {
     return AppVersionMetadata(
@@ -43,7 +40,9 @@ class UpdateCheckerService {
         ),
       );
       if (response.statusCode == 200 && response.data is Map<String, dynamic>) {
-        return AppVersionMetadata.fromJson(response.data as Map<String, dynamic>);
+        return AppVersionMetadata.fromJson(
+          response.data as Map<String, dynamic>,
+        );
       }
     } catch (_) {
       // Fail silently if release lookup fails
@@ -92,7 +91,8 @@ Future<void> performVersionCheck(
   if (meta == null || !context.mounted) return;
   final l10n = context.l10n;
 
-  final hasNewUpdate = compareVersion(meta.latestAppVersion, currentVersion) > 0;
+  final hasNewUpdate =
+      compareVersion(meta.latestAppVersion, currentVersion) > 0;
 
   if (hasNewUpdate) {
     // Show optional update dialog
@@ -104,9 +104,7 @@ Future<void> performVersionCheck(
           l10n.newUpdateAvailable,
           style: const TextStyle(fontWeight: FontWeight.bold),
         ),
-        content: Text(
-          l10n.newUpdateAvailableMessage,
-        ),
+        content: Text(l10n.newUpdateAvailableMessage),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
@@ -114,11 +112,9 @@ Future<void> performVersionCheck(
           ),
           TextButton(
             onPressed: () async {
-              Navigator.pop(context);
               final uri = Uri.parse(meta.updateUrl);
-              if (await canLaunchUrl(uri)) {
-                await launchUrl(uri, mode: LaunchMode.externalApplication);
-              }
+              await launchUrl(uri, mode: LaunchMode.externalApplication);
+              if (context.mounted) Navigator.pop(context);
             },
             child: Text(
               l10n.updateNow,
