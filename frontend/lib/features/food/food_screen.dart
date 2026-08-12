@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/constants/cuisine_types.dart';
+import '../../core/constants/supported_cities.dart';
 import '../../core/errors/failures.dart';
 import '../../core/localization/l10n.dart';
 import '../../data/models/paginated_food_model.dart';
@@ -37,7 +38,10 @@ class _FoodScreenState extends ConsumerState<FoodScreen> {
     final l10n = context.l10n;
     final user = ref.watch(userProfileProvider).value;
     final cuisines = cuisineTypesForNationality(user?.nationality);
-    final filter = FoodFilter(city: user?.city ?? 'Dubai', cuisine: cuisine);
+    final filter = FoodFilter(
+      city: user?.city ?? defaultSupportedCity,
+      cuisine: cuisine,
+    );
     final provider = foodNotifierProvider(filter);
 
     return Scaffold(

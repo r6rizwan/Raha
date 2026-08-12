@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/localization/l10n.dart';
 import '../../core/constants/nationalities.dart';
+import '../../core/constants/supported_cities.dart';
 import '../../core/errors/failures.dart';
 import '../../core/router/app_router.dart';
 import 'onboarding_notifier.dart';
@@ -25,13 +26,12 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   static const Color borderColor = AppColors.border;
 
   String nationality = supportedNationalities.first;
-  final city = TextEditingController(text: 'Dubai');
+  String selectedCity = defaultSupportedCity;
   final neighbourhood = TextEditingController();
   final tags = TextEditingController();
 
   @override
   void dispose() {
-    city.dispose();
     neighbourhood.dispose();
     tags.dispose();
     super.dispose();
@@ -150,15 +150,28 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
 
                         // City Field
                         _buildFieldLabel(l10n.city.toUpperCase()),
-                        TextField(
-                          controller: city,
-                          textCapitalization: TextCapitalization.words,
+                        DropdownButtonFormField<String>(
+                          initialValue: selectedCity,
                           style: const TextStyle(
                             color: textColor,
                             fontSize: 14,
                             fontWeight: FontWeight.w500,
                           ),
+                          icon: const Icon(
+                            Icons.keyboard_arrow_down,
+                            color: mutedColor,
+                          ),
                           decoration: _buildInputDecoration(),
+                          items: supportedCities
+                              .map(
+                                (city) => DropdownMenuItem(
+                                  value: city,
+                                  child: Text(city),
+                                ),
+                              )
+                              .toList(),
+                          onChanged: (value) =>
+                              setState(() => selectedCity = value!),
                         ),
                         const SizedBox(height: 18),
 
@@ -220,7 +233,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                                         )
                                         .saveProfile(
                                           nationality,
-                                          city.text,
+                                          selectedCity,
                                           neighbourhood.text,
                                           tags.text
                                               .split(',')

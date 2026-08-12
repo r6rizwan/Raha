@@ -281,7 +281,7 @@ abstract class AppLocalizations {
   /// No description provided for @neighbourhoodHint.
   ///
   /// In en, this message translates to:
-  /// **'e.g. Dubai Marina, JLT'**
+  /// **'e.g. Marina, Al Zahiyah, Al Andalus'**
   String get neighbourhoodHint;
 
   /// No description provided for @interestsHint.
@@ -689,13 +689,13 @@ abstract class AppLocalizations {
   /// No description provided for @cityExample.
   ///
   /// In en, this message translates to:
-  /// **'City (e.g. Dubai)'**
+  /// **'City'**
   String get cityExample;
 
   /// No description provided for @neighbourhoodExample.
   ///
   /// In en, this message translates to:
-  /// **'Neighbourhood (e.g. JLT)'**
+  /// **'Neighbourhood / Area'**
   String get neighbourhoodExample;
 
   /// No description provided for @pleaseEnterYourName.

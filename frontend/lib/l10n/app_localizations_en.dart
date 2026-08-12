@@ -100,7 +100,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get continueLabel => 'Continue';
 
   @override
-  String get neighbourhoodHint => 'e.g. Dubai Marina, JLT';
+  String get neighbourhoodHint => 'e.g. Marina, Al Zahiyah, Al Andalus';
 
   @override
   String get interestsHint =>
@@ -322,10 +322,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get fullName => 'Full Name';
 
   @override
-  String get cityExample => 'City (e.g. Dubai)';
+  String get cityExample => 'City';
 
   @override
-  String get neighbourhoodExample => 'Neighbourhood (e.g. JLT)';
+  String get neighbourhoodExample => 'Neighbourhood / Area';
 
   @override
   String get pleaseEnterYourName => 'Please enter your name';

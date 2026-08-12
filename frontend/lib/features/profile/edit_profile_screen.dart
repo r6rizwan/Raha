@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import '../../core/constants/supported_cities.dart';
 import '../../core/localization/l10n.dart';
 import '../../core/theme/app_theme.dart';
 import '../../data/repositories/auth_repository.dart';
@@ -17,24 +18,25 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
   bool _isLoading = false;
 
   late TextEditingController _nameController;
-  late TextEditingController _cityController;
   late TextEditingController _nationalityController;
   late TextEditingController _neighbourhoodController;
+  late String _selectedCity;
 
   @override
   void initState() {
     super.initState();
     final user = ref.read(userProfileProvider).value;
     _nameController = TextEditingController(text: user?.name ?? '');
-    _cityController = TextEditingController(text: user?.city ?? '');
     _nationalityController = TextEditingController(text: user?.nationality ?? '');
     _neighbourhoodController = TextEditingController(text: user?.neighbourhood ?? '');
+    _selectedCity = supportedCities.contains(user?.city)
+        ? user!.city
+        : defaultSupportedCity;
   }
 
   @override
   void dispose() {
     _nameController.dispose();
-    _cityController.dispose();
     _nationalityController.dispose();
     _neighbourhoodController.dispose();
     super.dispose();
@@ -48,7 +50,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
     
     final result = await ref.read(authRepositoryProvider).saveProfile(
       name: _nameController.text.trim(),
-      city: _cityController.text.trim(),
+      city: _selectedCity,
       nationality: _nationalityController.text.trim(),
       neighbourhood: _neighbourhoodController.text.trim(),
       interestTags: [], // Note: Interest tags editing can be added later
@@ -118,13 +120,29 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
               const SizedBox(height: 28),
               _buildSectionTitle(l10n.locationAndBackground),
               const SizedBox(height: 16),
-              _buildTextField(
-                controller: _cityController,
-                label: l10n.cityExample,
-                icon: Icons.location_city_outlined,
-                validator: (v) => v == null || v.trim().isEmpty
-                    ? l10n.pleaseEnterYourCity
-                    : null,
+              DropdownButtonFormField<String>(
+                initialValue: _selectedCity,
+                decoration: _buildDropdownDecoration(
+                  label: l10n.city,
+                  icon: Icons.location_city_outlined,
+                ),
+                style: const TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.text,
+                ),
+                items: supportedCities
+                    .map(
+                      (city) => DropdownMenuItem(
+                        value: city,
+                        child: Text(city),
+                      ),
+                    )
+                    .toList(),
+                onChanged: (value) {
+                  if (value == null) return;
+                  setState(() => _selectedCity = value);
+                },
               ),
               const SizedBox(height: 16),
               _buildTextField(
@@ -234,6 +252,35 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
         ),
         contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
       ),
+    );
+  }
+
+  InputDecoration _buildDropdownDecoration({
+    required String label,
+    required IconData icon,
+  }) {
+    return InputDecoration(
+      labelText: label,
+      labelStyle: const TextStyle(
+        color: AppColors.muted,
+        fontWeight: FontWeight.w500,
+      ),
+      prefixIcon: Icon(icon, color: AppColors.primary, size: 22),
+      filled: true,
+      fillColor: AppColors.card,
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(16),
+        borderSide: BorderSide(color: AppColors.border, width: 0.5),
+      ),
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(16),
+        borderSide: BorderSide(color: AppColors.border, width: 0.5),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(16),
+        borderSide: const BorderSide(color: AppColors.primary, width: 1.5),
+      ),
+      contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
     );
   }
 }

@@ -67,7 +67,21 @@ Food records are stored in MongoDB. Google Places is used by a backend sync scri
 npx -y node@20 src/scripts/syncPlacesFood.js --deactivate-seed --page-size=5
 ```
 
-The sync script searches Dubai for supported cuisines and upserts restaurants by `googlePlaceId`.
+The sync script searches the selected city for supported cuisines and upserts restaurants by `googlePlaceId`.
+The sync script is city-parameterized and can be run for each supported city:
+
+```sh
+npx -y node@20 src/scripts/syncPlacesFood.js --city=Dubai --deactivate-seed --page-size=5
+npx -y node@20 src/scripts/syncPlacesFood.js --city="Abu Dhabi" --page-size=5
+npx -y node@20 src/scripts/syncPlacesFood.js --city=Riyadh --page-size=5
+npx -y node@20 src/scripts/syncPlacesFood.js --city=Jeddah --page-size=5
+```
+
+Current app city selection supports:
+
+```txt
+Dubai, Abu Dhabi, Riyadh, Jeddah
+```
 
 Supported imported cuisines currently include:
 

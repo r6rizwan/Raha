@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
+import '../../core/constants/supported_cities.dart';
 import '../../core/localization/l10n.dart';
 import '../../core/localization/locale_provider.dart';
 import '../../data/repositories/auth_repository.dart';
@@ -122,7 +123,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                                   ),
                                   const SizedBox(height: 5),
                                   Text(
-                                    '${user?.nationality ?? l10n.expat} · ${user?.city ?? 'Dubai'}',
+                                    '${user?.nationality ?? l10n.expat} · ${user?.city ?? defaultSupportedCity}',
                                     style: TextStyle(
                                       color: whiteTextColor.withValues(
                                         alpha: 0.65,

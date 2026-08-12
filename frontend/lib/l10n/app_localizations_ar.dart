@@ -100,7 +100,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get continueLabel => 'متابعة';
 
   @override
-  String get neighbourhoodHint => 'مثال: دبي مارينا، JLT';
+  String get neighbourhoodHint => 'مثال: مارينا، الزاهية، الأندلس';
 
   @override
   String get interestsHint => 'مثال: طعام، تنظيف، استكشاف (مفصولة بفواصل)';
@@ -316,10 +316,10 @@ class AppLocalizationsAr extends AppLocalizations {
   String get fullName => 'الاسم الكامل';
 
   @override
-  String get cityExample => 'المدينة (مثال: دبي)';
+  String get cityExample => 'المدينة';
 
   @override
-  String get neighbourhoodExample => 'المنطقة (مثال: JLT)';
+  String get neighbourhoodExample => 'المنطقة';
 
   @override
   String get pleaseEnterYourName => 'يرجى إدخال اسمك';

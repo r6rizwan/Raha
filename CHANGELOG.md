@@ -2,6 +2,13 @@
 
 All notable changes to Raha should be documented in this file.
 
+## v1.1.4
+
+- Added explicit support for four selectable cities: Dubai, Abu Dhabi, Riyadh, and Jeddah
+- Replaced free-text city entry in onboarding and profile editing with controlled city selection
+- Removed remaining Dubai-first fallbacks from core food, services, and profile flows
+- Updated English and Arabic placeholder copy so the app reads naturally as a multi-city product
+
 ## v1.1.3
 
 - Switched app update checking to compare the installed app version against the latest published GitHub Release

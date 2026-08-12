@@ -1096,6 +1096,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         return 'دبي';
       case 'Abu Dhabi':
         return 'أبوظبي';
+      case 'Riyadh':
+        return 'الرياض';
+      case 'Jeddah':
+        return 'جدة';
       case 'Sharjah':
         return 'الشارقة';
       case 'UAE':

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/constants/service_categories.dart';
+import '../../core/constants/supported_cities.dart';
 import '../../core/errors/failures.dart';
 import '../../core/localization/l10n.dart';
 import '../../data/models/paginated_providers_model.dart';
@@ -61,7 +62,7 @@ class _ServicesScreenState extends ConsumerState<ServicesScreen> {
     final l10n = context.l10n;
     final user = ref.watch(userProfileProvider).value;
     final filter = ServiceFilter(
-      city: user?.city ?? 'Dubai',
+      city: user?.city ?? defaultSupportedCity,
       category: category,
     );
     final provider = serviceNotifierProvider(filter);
@@ -148,7 +149,9 @@ class _ServicesScreenState extends ConsumerState<ServicesScreen> {
                   if (!_searchActive) ...[
                     const SizedBox(height: 8),
                     Text(
-                      l10n.bookVerifiedProvidersAround(user?.city ?? 'Dubai'),
+                      l10n.bookVerifiedProvidersAround(
+                        user?.city ?? defaultSupportedCity,
+                      ),
                       style: TextStyle(
                         color: Colors.white.withValues(alpha: 0.65),
                         fontSize: 13,
